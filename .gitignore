@@ -1,0 +1,6 @@
+/.idea/*
+/.settings/
+/cache/
+/conf/config.php
+/conf/config_test.php
+/app/mm
