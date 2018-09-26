@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtText extends Datatype
 {
-    const TEXT_SQL_DEFINITION = 'TEXT';
+    const TEXT_SQL_DEFINITION = 'text';
 
     /**
      * {@inheritdoc}

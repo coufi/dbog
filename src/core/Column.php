@@ -76,7 +76,7 @@ class Column
             $default = $default ? 1 : 0;
         }
 
-        $this->default = (string) $default;
+        $this->default = $default;
         return $this;
     }
 
@@ -390,6 +390,15 @@ class Column
     public function getDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Get datatype.
+     * @return Datatype
+     */
+    public function getDatatype()
+    {
+        return $this->datatype;
     }
 
     /**

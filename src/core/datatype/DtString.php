@@ -36,7 +36,7 @@ class DtString extends Datatype
      * Get string max length.
      * @return int
      */
-    public function getLength()
+    public function getSqlMaxLength()
     {
         return $this->length;
     }

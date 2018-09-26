@@ -17,7 +17,7 @@ class DtBool extends Datatype
      */
     public function getSqlDefinition()
     {
-        return BOOL_SQL_DEFINITION;
+        return self::BOOL_SQL_DEFINITION;
     }
 
     /**

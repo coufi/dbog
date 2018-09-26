@@ -201,6 +201,15 @@ class Config
     }
 
     /**
+     * Get renamed from name.
+     * @return string
+     */
+    public function getRenamedFrom()
+    {
+        return $this->renamedFrom;
+    }
+
+    /**
      * Get columns.
      * @return Column[]
      */
@@ -298,7 +307,7 @@ class Config
      */
     public function getColumn($name)
     {
-        return $this->columns[$name];
+        return $this->columns[$name] ?? false;
     }
 
 

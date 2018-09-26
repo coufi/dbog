@@ -10,10 +10,10 @@ abstract class TableContainer
 {
 
     /** @var \Closure[] */
-    protected $callbacks;
+    protected $callbacks = [];
 
     /** @var Table[] */
-    protected $instatiated;
+    protected $instatiated = [];
 
     /**
      * Register all required classes.
