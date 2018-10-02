@@ -19,13 +19,13 @@ class Server
     /**
      * @param string $driver
      * @param string $dbHost
-     * @param int $dbPort
+     * @param int|null $dbPort
      */
-    public function __construct($driver, $dbHost, $dbPort = self::DEFAULT_PORT)
+    public function __construct($driver, $dbHost, $dbPort = null)
     {
         $this->driver = $driver;
         $this->dbHost = $dbHost;
-        $this->dbPort = $dbPort;
+        $this->dbPort = is_null($dbPort) ? self::DEFAULT_PORT : $dbPort;
     }
 
     /**
