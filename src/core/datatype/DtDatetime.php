@@ -10,13 +10,21 @@ use Src\Core\Datatype;
 
 class DtDatetime extends Datatype
 {
-    const DATETIME_SQL_DEFINITION = 'datetime';
+    const DATETIME_SQL_DATATYPE = 'datetime';
 
     /**
      * {@inheritdoc}
      */
     public function getSqlDefinition()
     {
-        return self::DATETIME_SQL_DEFINITION;
+        return self::DATETIME_SQL_DATATYPE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::DATETIME_SQL_DATATYPE;
     }
 }

@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtInt extends Datatype
 {
-    const INT_SQL_DEFINITION = 'int';
+    const INT_SQL_DATATYPE = 'int';
     const SIGNED_DEFINITION = ' signed';
 
     /** @var bool  */
@@ -21,7 +21,15 @@ class DtInt extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::INT_SQL_DEFINITION . ($this->unsigned ? self::UNSIGNED_DEFINITION : self::SIGNED_DEFINITION);
+        return self::INT_SQL_DATATYPE . ($this->unsigned ? self::UNSIGNED_DEFINITION : self::SIGNED_DEFINITION);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::INT_SQL_DATATYPE;
     }
 
     /**
@@ -34,8 +42,7 @@ class DtInt extends Datatype
     }
 
     /**
-     * Whether is unsigned.
-     * @return bool
+     * {@inheritdoc}
      */
     public function isUnsigned()
     {
@@ -48,5 +55,13 @@ class DtInt extends Datatype
     public function getSqlPrecision()
     {
         return 10;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlScale()
+    {
+        return 0;
     }
 }

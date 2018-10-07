@@ -8,7 +8,7 @@ namespace Src\Core\Datatype;
 
 class DtTinyint extends DtInt
 {
-    const TINYINT_SQL_DEFINITION = 'tinyint';
+    const TINYINT_SQL_DATATYPE = 'tinyint';
 
     /**
      * Get text max length.
@@ -16,7 +16,15 @@ class DtTinyint extends DtInt
      */
     public function getSqlDefinition()
     {
-        return self::TINYINT_SQL_DEFINITION . ($this->unsigned ? self::UNSIGNED_DEFINITION : self::SIGNED_DEFINITION);
+        return self::TINYINT_SQL_DATATYPE . ($this->unsigned ? self::UNSIGNED_DEFINITION : self::SIGNED_DEFINITION);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::TINYINT_SQL_DATATYPE;
     }
 
     /**

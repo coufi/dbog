@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtYear extends Datatype
 {
-    const YEAR_SQL_DEFINITION = 'year';
+    const YEAR_SQL_DATATYPE = 'year';
 
     /**
      * Get text max length.
@@ -18,6 +18,14 @@ class DtYear extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::YEAR_SQL_DEFINITION;
+        return self::YEAR_SQL_DATATYPE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::YEAR_SQL_DATATYPE;
     }
 }

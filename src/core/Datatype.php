@@ -16,6 +16,12 @@ abstract class Datatype
      */
     abstract public function getSqlDefinition();
 
+    /**
+     * Get SQL datatype.
+     * @return string
+     */
+    abstract public function getSqlDatatype();
+
     public function getSqlMaxLength()
     {
         return null;
@@ -37,5 +43,14 @@ abstract class Datatype
     public function getSqlScale()
     {
         return null;
+    }
+
+    /**
+     * Whether is unsigned.
+     * @return bool
+     */
+    public function isUnsigned()
+    {
+        return false;
     }
 }

@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtString extends Datatype
 {
-    const STRING_SQL_DEFINITION = 'varchar';
+    const STRING_SQL_DATATYPE = 'varchar';
 
     /** @var int */
     protected $length = 127;
@@ -21,7 +21,10 @@ class DtString extends Datatype
      */
     public function setLength($length)
     {
-        $this->length = $length;
+        if (!is_null($length))
+        {
+            $this->length = $length;
+        }
     }
 
     /**
@@ -29,7 +32,15 @@ class DtString extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::STRING_SQL_DEFINITION . '(' . $this->length . ')';
+        return self::STRING_SQL_DATATYPE . '(' . $this->length . ')';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::STRING_SQL_DATATYPE;
     }
 
     /**

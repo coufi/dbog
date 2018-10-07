@@ -10,14 +10,22 @@ use Src\Core\Datatype;
 
 class DtTextMedium extends Datatype
 {
-    const MEDIUMTEXT_SQL_DEFINITION = 'mediumtext';
+    const MEDIUMTEXT_SQL_DATATYPE = 'mediumtext';
 
     /**
      * {@inheritdoc}
      */
     public function getSqlDefinition()
     {
-        return self::MEDIUMTEXT_SQL_DEFINITION;
+        return self::MEDIUMTEXT_SQL_DATATYPE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::MEDIUMTEXT_SQL_DATATYPE;
     }
 
     /**

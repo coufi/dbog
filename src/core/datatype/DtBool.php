@@ -11,6 +11,7 @@ use Src\Core\Datatype;
 class DtBool extends Datatype
 {
     const BOOL_SQL_DEFINITION = 'tinyint(1) unsigned';
+    const BOOL_SQL_DATATYPE = 'tinyint';
 
     /**
      * {@inheritdoc}
@@ -21,12 +22,20 @@ class DtBool extends Datatype
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::BOOL_SQL_DATATYPE;
+    }
+
+    /**
      * Whether is unsigned.
      * @return bool
      */
     public function isUnsigned()
     {
-        return $this->true;
+        return true;
     }
 
     /**

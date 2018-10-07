@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtTime extends Datatype
 {
-    const TIME_SQL_DEFINITION = 'time';
+    const TIME_SQL_DATATYPE = 'time';
 
     /**
      * Get text max length.
@@ -18,6 +18,14 @@ class DtTime extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::TIME_SQL_DEFINITION;
+        return self::TIME_SQL_DATATYPE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::TIME_SQL_DATATYPE;
     }
 }

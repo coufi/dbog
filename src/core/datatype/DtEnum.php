@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtEnum extends Datatype
 {
-    const ENUM_SQL_DEFINITION = 'enum';
+    const ENUM_SQL_DATATYPE = 'enum';
 
     /** @var array */
     protected $allowedValues;
@@ -28,6 +28,14 @@ class DtEnum extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::ENUM_SQL_DEFINITION . "('" . implode("','", $this->allowedValues) . "')";
+        return self::ENUM_SQL_DATATYPE . "('" . implode("','", $this->allowedValues) . "')";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::ENUM_SQL_DATATYPE;
     }
 }

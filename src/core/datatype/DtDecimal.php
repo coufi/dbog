@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtDecimal extends Datatype
 {
-    const DECIMAL_SQL_DEFINITION = 'decimal';
+    const DECIMAL_SQL_DATATYPE = 'decimal';
 
     /** @var bool */
     protected $unsigned = false;
@@ -80,7 +80,15 @@ class DtDecimal extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::DECIMAL_SQL_DEFINITION . '(' . $this->precision . ',' . $this->fraction . ')' . ($this->unsigned ? self::UNSIGNED_DEFINITION : '');
+        return self::DECIMAL_SQL_DATATYPE . '(' . $this->precision . ',' . $this->fraction . ')' . ($this->unsigned ? self::UNSIGNED_DEFINITION : '');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::DECIMAL_SQL_DATATYPE;
     }
 
     /**

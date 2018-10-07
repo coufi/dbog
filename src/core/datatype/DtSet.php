@@ -10,7 +10,7 @@ use Src\Core\Datatype;
 
 class DtSet extends Datatype
 {
-    const SET_SQL_DEFINITION = 'set';
+    const SET_SQL_DATATYPE = 'set';
 
     /** @var array */
     protected $allowedValues;
@@ -28,6 +28,14 @@ class DtSet extends Datatype
      */
     public function getSqlDefinition()
     {
-        return self::SET_SQL_DEFINITION . "('" . implode("','", $this->allowedValues) . "')";
+        return self::SET_SQL_DATATYPE . "('" . implode("','", $this->allowedValues) . "')";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::SET_SQL_DATATYPE;
     }
 }

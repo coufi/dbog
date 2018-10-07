@@ -10,14 +10,22 @@ use Src\Core\Datatype;
 
 class DtText extends Datatype
 {
-    const TEXT_SQL_DEFINITION = 'text';
+    const TEXT_SQL_DATATYPE = 'text';
 
     /**
      * {@inheritdoc}
      */
     public function getSqlDefinition()
     {
-        return self::TEXT_SQL_DEFINITION;
+        return self::TEXT_SQL_DATATYPE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlDatatype()
+    {
+        return self::TEXT_SQL_DATATYPE;
     }
 
     /**
