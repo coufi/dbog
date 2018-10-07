@@ -1,7 +1,7 @@
 <?php
 /**
  * dbog ...conf/ConfigExample.php
- * Cab be renamed to Config.php and used as application configuration
+ * Can be renamed to Config.php, edited and used as application configuration
  */
 
 namespace Conf;

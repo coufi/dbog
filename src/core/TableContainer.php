@@ -22,12 +22,12 @@ abstract class TableContainer
 
     /**
      * Whether has instance.
-     * @param string $className
+     * @param string $tableName
      * @return bool
      */
-    public function has($className)
+    public function has($tableName)
     {
-        return isset ($this->instatiated[$className]) || isset ($this->callbacks[$className]);
+        return isset ($this->instatiated[$tableName]) || isset ($this->callbacks[$tableName]);
     }
 
     /**
@@ -36,29 +36,32 @@ abstract class TableContainer
      */
     public function add($className)
     {
-        $this->callbacks[$className] = function() use ($className) { return new $className(); };
+        /** @var $className Table */
+        $tableName = $className::getTableLabel();
+
+        $this->callbacks[$tableName] = function() use ($className) { return new $className($this); };
     }
 
     /**
      * Get instance.
-     * @param string $className
+     * @param string $tableName
      * @return Table|null
      */
-    public function get($className)
+    public function get($tableName)
     {
-        if ($this->has($className) && !isset ($this->instatiated[$className]))
+        if ($this->has($tableName) && !isset ($this->instatiated[$tableName]))
         {
-            $this->instatiated[$className] = $this->callbacks[$className]();
+            $this->instatiated[$tableName] = $this->callbacks[$tableName]();
         }
 
-        return $this->instatiated[$className];
+        return $this->instatiated[$tableName];
     }
 
     /**
-     * Get all registered class names
+     * Get all registered table names
      * @return array
      */
-    public function getClassNames()
+    public function getTableNames()
     {
         return array_keys($this->callbacks);
     }
@@ -70,9 +73,9 @@ abstract class TableContainer
     public function getAll()
     {
         $return = [];
-        foreach ($this->getClassNames() as $className)
+        foreach ($this->getTableNames() as $tableName)
         {
-            $return[$className] = $this->get($className);
+            $return[$tableName] = $this->get($tableName);
         }
 
         return $return;

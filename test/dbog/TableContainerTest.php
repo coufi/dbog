@@ -22,13 +22,13 @@ class TableContainerTest extends TestCase
     public function testCollection()
     {
         //empty uninitialized collection
-        $this->assertEmpty($this->container->getClassNames());
+        $this->assertEmpty($this->container->getTableNames());
 
         $this->container->init();
-        $this->assertNotEmpty($this->container->getClassNames());
+        $this->assertNotEmpty($this->container->getTableNames());
 
         $this->container->add(TestTableTemplate::class);
-        $this->assertTrue($this->container->has(TestTableTemplate::class));
+        $this->assertTrue($this->container->has(TestTableTemplate::getTableLabel()));
     }
 
     public function testInstanceLoading()
@@ -36,6 +36,6 @@ class TableContainerTest extends TestCase
         $this->container->init();
         $this->container->add(TestTableTemplate::class);
 
-        $this->assertInstanceOf(TestTableTemplate::class, $this->container->get(TestTableTemplate::class));
+        $this->assertInstanceOf(TestTableTemplate::class, $this->container->get(TestTableTemplate::getTableLabel()));
     }
 }

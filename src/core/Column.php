@@ -104,7 +104,10 @@ class Column
             $tableName = substr($this->columnName, 3);      //remove 'id_'
         }
 
-        $this->table->addRelationMapping($tableName, [$this->columnName], [Config::ID_PREFIX . $tableName]);
+        $targetColumnName = Config::ID_PREFIX . $tableName;
+        $this->table->addRelationMapping($tableName, [$this->columnName], [$targetColumnName]);
+        $targetColumn = $this->table->getTableContainer()->get($tableName)->getConfiguration()->getColumn($targetColumnName);
+        $this->setDatatype($targetColumn->getDatatype());
 
         return $this;
     }
@@ -366,6 +369,17 @@ class Column
     }
 
     /**
+     * Set datatype directly.
+     * @param Datatype $datatype
+     * @return Column
+     */
+    public function setDatatype($datatype)
+    {
+        $this->datatype = $datatype;
+        return $this;
+    }
+
+    /**
      * Get column name.
      * @return string
      */
@@ -408,5 +422,41 @@ class Column
     public function getRenamedFrom()
     {
         return $this->renamedFrom;
+    }
+
+    /**
+     * Get table config.
+     * @return Config
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
+
+    /**
+     * Whether is primary key column.
+     * @return bool
+     */
+    public function isPrimaryKey()
+    {
+        return in_array($this->columnName, $this->table->getKeyPrimary()->getColumns());
+    }
+
+
+    /**
+     * Whether is foreign key column.
+     * @return bool
+     */
+    public function isForeignKey()
+    {
+        foreach ($this->table->getRelationsMapping() as $mapping)
+        {
+            if (in_array($this->columnName, $mapping->getColumns()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

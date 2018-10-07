@@ -13,14 +13,33 @@ abstract class Table
     /** @var string */
     protected $tableName;
 
+    /** @var TableContainer */
+    protected $tableContainer;
+
     /** @var Config */
     protected $configCache;
 
-    public function __construct()
+    /**
+     * @param TableContainer $tableContainer
+     */
+    public function __construct($tableContainer)
     {
+        $this->tableName = self::getTableLabel();
+        $this->tableContainer = $tableContainer;
+    }
+
+    /**
+     * Get table name without class instantiating.
+     * @return string
+     */
+    public static function getTableLabel()
+    {
+        // remove namespace string from called class
+        $className = explode('\\', get_called_class());
+        $className = end( $className);
+
         // convert camelcase class name to snake case table name
-        $className = (new \ReflectionClass($this))->getShortName();
-        $this->tableName = ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $className)), '_');
+        return ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $className)), '_');
     }
 
     /**
@@ -30,6 +49,15 @@ abstract class Table
     public function getTableName()
     {
         return $this->tableName;
+    }
+
+    /**
+     * Get table container.
+     * @return TableContainer
+     */
+    public function getTableContainer()
+    {
+        return $this->tableContainer;
     }
 
     /**
@@ -53,6 +81,6 @@ abstract class Table
      */
     protected function createConfig()
     {
-        return new Config($this->tableName);
+        return new Config($this->tableName, $this->tableContainer);
     }
 }

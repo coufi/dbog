@@ -13,6 +13,7 @@ use Src\Core\Relation\Connection;
 use Src\Core\Relation\Extension;
 use Src\Core\Relation\Mapped;
 use Src\Core\Relation\Mapping;
+use Src\Core\TableContainer;
 use Src\Core\Trigger;
 
 class Config
@@ -22,6 +23,9 @@ class Config
 
     /**  @var string */
     protected $tableName;
+
+    /**  @var TableContainer */
+    protected $tableContainer;
 
     /**  @var string  */
     protected $renamedFrom;
@@ -55,10 +59,12 @@ class Config
 
     /**
      * @param string $tableName
+     * @param TableContainer $tableContainer
      */
-    public function __construct($tableName)
+    public function __construct($tableName, $tableContainer)
     {
         $this->tableName = $tableName;
+        $this->tableContainer = $tableContainer;
         $this->columns = [];
         $this->triggers = [];
         $this->relationMapping = [];
@@ -78,6 +84,15 @@ class Config
     {
         $this->renamedFrom = $renamedFrom;
         return $this;
+    }
+
+    /**
+     * Get table container.
+     * @return TableContainer
+     */
+    public function getTableContainer()
+    {
+        return $this->tableContainer;
     }
 
     /**
@@ -309,6 +324,4 @@ class Config
     {
         return $this->columns[$name] ?? false;
     }
-
-
 }

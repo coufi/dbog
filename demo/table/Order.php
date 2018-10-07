@@ -14,6 +14,7 @@ class Order extends \Src\Core\Table
     protected function initConfiguration()
     {
         $config = $this->createConfig();
+        $config->addPrimary()->setBigIntUnsigned();
         return $config;
     }
 }
