@@ -17,6 +17,10 @@ abstract class Relation
     /** @var string */
     protected $reference;
 
+    /**
+     * @param string $tableName
+     * @param string $reference
+     */
     public function __construct($tableName, $reference)
     {
         $this->tableName = $tableName;
