@@ -71,7 +71,7 @@ class Dbog
         $db = new AdapterPDO();
         $db->connect($instance);
 
-        $runner = new Runner($db, $instance->getTableContainer(), $instance->getSchema());
+        $runner = new Runner($db, $instance->getSchema(), $instance->getDbSchemaName());
         $runner->setLogger($this->logger);
         $runner->setDryRunMode($dryRun);
 

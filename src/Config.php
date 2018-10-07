@@ -5,7 +5,7 @@
 
 namespace Src;
 
-use Src\Core\TableContainer;
+use Src\Core\Schema;
 use Src\Database\Instance;
 use Src\Database\Server;
 
@@ -15,6 +15,9 @@ abstract class Config
 
     /** @var Instance[] */
     protected $instances = [];
+
+    /** @var Schema[] */
+    protected $schemas = [];
 
     /**
      * @return Instance[]
@@ -26,14 +29,14 @@ abstract class Config
 
     /**
      * @param Server $dbServer
-     * @param string $schema
+     * @param Schema $schema
      * @param string $user
      * @param string $password
-     * @param TableContainer $tableContainer
+     * @param string $dbSchemaName Database schema name
      */
-    protected function addInstance($dbServer, $schema, $user, $password, $tableContainer)
+    protected function addInstance($dbServer, $schema, $user, $password, $dbSchemaName)
     {
-        $this->instances[] = new Instance($dbServer, $schema, $user, $password, $tableContainer);
+        $this->instances[] = new Instance($dbServer, $schema, $user, $password, $dbSchemaName);
     }
 
     /**
@@ -45,5 +48,21 @@ abstract class Config
     protected function createDbServerConfig($driver, $dbHost, $dbPort = null)
     {
         return new Database\Server($driver, $dbHost, $dbPort);
+    }
+
+    /**
+     * @param string $className
+     * @return Schema
+     */
+    protected function createSchema($className)
+    {
+        /** @var Schema $className */
+        if (!isset ($this->schemas[$className]))
+        {
+            $this->schemas[$className] = new $className();
+            $this->schemas[$className]->init();
+        }
+
+        return $this->schemas[$className];
     }
 }

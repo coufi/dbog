@@ -50,7 +50,7 @@ class AdapterPDO implements AdapterInterface
 
     /**
      * Create new PDO instantion.
-     * @param $instanceConfig
+     * @param Instance $instanceConfig
      * @return \PDO
      */
     private function create($instanceConfig)
@@ -60,7 +60,7 @@ class AdapterPDO implements AdapterInterface
         $dsn = sprintf(
             '%s::dbname=%s;host=%s',
             $instanceConfig->getDbServer()->getDriver(),
-            $instanceConfig->getSchema(),
+            $instanceConfig->getDbSchemaName(),
             $serverConfig->getDbHost() . ':' . $serverConfig->getDbPort()
         );
 

@@ -19,10 +19,10 @@ class ConfigExample extends \Src\Config
 
         $this->addInstance(
             $server,
-            'sync_test',
+            $this->createSchema(\Demo\Schema::class),
             'root',
             'pwdexample',
-            new \Demo\TableContainer()
+            'sync_test'
         );
     }
 }

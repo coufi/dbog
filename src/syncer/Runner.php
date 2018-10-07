@@ -14,22 +14,22 @@ use Src\Core\Key\Index;
 use Src\Core\Key\Primary;
 use Src\Core\Key\Unique;
 use Src\Core\Relation\Mapping;
+use Src\Core\Schema;
+use Src\Core\Table;
 use Src\Core\Table\Config;
-use Src\Core\TableContainer;
 use Src\Core\Trigger;
 use Src\Database\AdapterInterface;
 use Src\Logger;
 
 class Runner
 {
-    const ENGINE_INNODB = 'innodb';
-    const DB_CHARSET_UTF8 = 'utf8';
-    const DB_COLLATION_UTF8_GENERAL_CI = 'utf8_general_ci';
-
     /** @var AdapterInterface */
     protected $db;
 
-    /** @var Config */
+    /** @var Schema */
+    protected $schema;
+
+    /** @var Table[] */
     protected $tables;
 
     /** @var string */
@@ -41,27 +41,17 @@ class Runner
     /** @var Logger */
     protected $logger;
 
-    /** @var  string */
-    protected $dbCharset = self::DB_CHARSET_UTF8;
-
-    /** @var  string */
-    protected $dbCollation = self::DB_COLLATION_UTF8_GENERAL_CI;
-
-    /** @var  string */
-    protected $engine = self::ENGINE_INNODB;
-
 
     /**
      * @param AdapterInterface $db
-     * @param TableContainer $tables
+     * @param Schema $schema
      * @param string $dbSchemaName
      */
-    public function __construct($db, $tables, $dbSchemaName)
+    public function __construct($db, $schema, $dbSchemaName)
     {
         $this->db = $db;
-        $this->tables = $tables;
-        $this->tables->init();
-        $this->tables = $this->tables->getAll();
+        $this->schema = $schema;
+        $this->tables = $this->schema->getAllTables();
         $this->dbSchemaName = $dbSchemaName;
     }
 
@@ -71,30 +61,6 @@ class Runner
     public function setLogger($logger)
     {
         $this->logger = $logger;
-    }
-
-    /**
-     * @param string $dbCharset
-     */
-    public function setDbCharset($dbCharset)
-    {
-        $this->dbCharset = $dbCharset;
-    }
-
-    /**
-     * @param string $dbCollation
-     */
-    public function setDbCollation($dbCollation)
-    {
-        $this->dbCollation = $dbCollation;
-    }
-
-    /**
-     * @param string $engine
-     */
-    public function setEngine($engine)
-    {
-        $this->engine = $engine;
     }
 
     /**
@@ -139,16 +105,16 @@ FROM `information_schema`.`SCHEMATA` AS `S`
 WHERE `SCHEMA_NAME` = '$this->dbSchemaName'";
         $r = $this->db->fetch($q);
 
-        if ($r['charset'] != $this->dbCharset)
+        if ($r['charset'] != $this->schema->getDbCharset())
         {
-            $this->log("SYNC: Changing schema $this->dbSchemaName character set to $this->dbCharset.");
-            $this->processQuery("ALTER SCHEMA `$this->dbSchemaName` CHARACTER SET '$this->dbCharset'");
+            $this->log("SYNC: Changing schema $this->dbSchemaName character set to {$this->schema->getDbCharset()}.");
+            $this->processQuery("ALTER SCHEMA `$this->dbSchemaName` CHARACTER SET '{$this->schema->getDbCharset()}'");
         }
 
-        if ($r['collation'] != $this->dbCollation)
+        if ($r['collation'] != $this->schema->getDbCollation())
         {
-            $this->log("SYNC: Changing schema $this->dbSchemaName collation to $this->dbCollation.");
-            $this->processQuery("ALTER SCHEMA `$this->dbSchemaName` COLLATE '$this->dbCollation'");
+            $this->log("SYNC: Changing schema $this->dbSchemaName collation to {$this->schema->getDbCollation()}.");
+            $this->processQuery("ALTER SCHEMA `$this->dbSchemaName` COLLATE '{$this->schema->getDbCollation()}'");
         }
     }
 
@@ -230,16 +196,16 @@ WHERE `T`.`TABLE_SCHEMA` = '{$this->dbSchemaName}' AND `T`.`TABLE_NAME` = '$tabl
                 $this->processQuery("ALTER TABLE `$tableRenamedFrom` RENAME TO `$tableName`");
             }
 
-            if (strtolower($r['engine']) != $this->engine)
+            if (strtolower($r['engine']) != $this->schema->getEngine())
             {
-                $this->log("SYNC: Changing table $tableName engine to {$this->engine}.");
-                $this->processQuery("ALTER TABLE `$tableName` ENGINE '{$this->engine}'");
+                $this->log("SYNC: Changing table $tableName engine to {$this->schema->getEngine()}.");
+                $this->processQuery("ALTER TABLE `$tableName` ENGINE '{$this->schema->getEngine()}'");
             }
 
-            if (strtolower($r['collation']) != $this->dbCollation)
+            if (strtolower($r['collation']) != $this->schema->getDbCollation())
             {
-                $this->log("SYNC: Changing table $tableName collation to {$this->dbCollation}.");
-                $this->processQuery("ALTER TABLE `$tableName` COLLATE '{$this->dbCollation}'");
+                $this->log("SYNC: Changing table $tableName collation to {$this->schema->getDbCollation()}.");
+                $this->processQuery("ALTER TABLE `$tableName` COLLATE '{$this->schema->getDbCollation()}'");
             }
 
             $this->syncTableColumns($tableConfig);
@@ -861,9 +827,9 @@ WHERE `C`.`TABLE_SCHEMA` = '{$this->dbSchemaName}' AND `C`.`TABLE_NAME` = :table
                 $recreate = true;
             }
 
-            if ($r['collation_name'] !== null && $r['collation_name'] != $this->dbCollation)
+            if ($r['collation_name'] !== null && $r['collation_name'] != $this->schema->getDbCollation())
             {
-                $this->log("SYNC: Changing column {$column->getName()} collation to {$this->dbCollation}");
+                $this->log("SYNC: Changing column {$column->getName()} collation to {$this->schema->getDbCollation()}");
                 $recreate = true;
             }
 

@@ -13,13 +13,13 @@ abstract class CoreTestCase extends TestCase
     /**  @var TestTableTemplate */
     protected $table;
 
-    /**  @var TableContainer */
-    protected $container;
+    /**  @var Schema */
+    protected $schema;
 
     protected function setUp()
     {
-        $this->container = new TestTableContainer();
-        $this->container->init();
-        $this->table = $this->container->get('test_table_template');
+        $this->schema = new TestSchema();
+        $this->schema->init();
+        $this->table = $this->schema->getTable('test_table_template');
     }
 }

@@ -1,41 +1,41 @@
 <?php
 /**
- * dbog .../test/dbog/TableContainerTest.php
+ * dbog .../test/dbog/SchemaTest.php
  */
 
 namespace Test\Dbog;
 
 use \PHPUnit\Framework\TestCase AS TestCase;
-use Src\Core\TableContainer;
+use Src\Core\Schema;
 use Test\TestTableTemplate;
 
 class TableContainerTest extends TestCase
 {
-    /** @var TableContainer */
-    protected $container;
+    /** @var Schema */
+    protected $schema;
 
     protected function setUp()
     {
-        $this->container = new \Demo\TableContainer();
+        $this->schema = new \Demo\Schema();
     }
 
     public function testCollection()
     {
         //empty uninitialized collection
-        $this->assertEmpty($this->container->getTableNames());
+        $this->assertEmpty($this->schema->getTableNames());
 
-        $this->container->init();
-        $this->assertNotEmpty($this->container->getTableNames());
+        $this->schema->init();
+        $this->assertNotEmpty($this->schema->getTableNames());
 
-        $this->container->add(TestTableTemplate::class);
-        $this->assertTrue($this->container->has(TestTableTemplate::getTableLabel()));
+        $this->schema->addTable(TestTableTemplate::class);
+        $this->assertTrue($this->schema->hasTable(TestTableTemplate::getTableLabel()));
     }
 
     public function testInstanceLoading()
     {
-        $this->container->init();
-        $this->container->add(TestTableTemplate::class);
+        $this->schema->init();
+        $this->schema->addTable(TestTableTemplate::class);
 
-        $this->assertInstanceOf(TestTableTemplate::class, $this->container->get(TestTableTemplate::getTableLabel()));
+        $this->assertInstanceOf(TestTableTemplate::class, $this->schema->getTable(TestTableTemplate::getTableLabel()));
     }
 }

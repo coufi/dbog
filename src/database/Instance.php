@@ -5,35 +5,35 @@
 
 namespace Src\Database;
 
-use Src\Core\TableContainer;
+use Src\Core\Schema;
 
 class Instance
 {
     /** @var Server */
     protected $dbServer;
-    /** @var string */
+    /** @var Schema */
     protected $schema;
     /** @var string */
     protected $user;
     /** @var string */
     protected $password;
-    /** @var TableContainer */
-    protected $tableContainer;
+    /** @var string */
+    protected $dbSchemaName;
 
     /**
      * @param Server $dbServer
-     * @param string $schema Database schema name
+     * @param Schema $schema
      * @param string $user Database user
      * @param string $password Database password
-     * @param TableContainer $tableContainer
+     * @param string $dbSchemaName Database schema name
      */
-    public function __construct($dbServer, $schema, $user, $password, $tableContainer)
+    public function __construct($dbServer, $schema, $user, $password, $dbSchemaName)
     {
         $this->dbServer = $dbServer;
         $this->schema = $schema;
         $this->user = $user;
         $this->password = $password;
-        $this->tableContainer = $tableContainer;
+        $this->dbSchemaName = $dbSchemaName;
     }
 
     /**
@@ -45,7 +45,7 @@ class Instance
     }
 
     /**
-     * @return string
+     * @return Schema
      */
     public function getSchema()
     {
@@ -69,10 +69,10 @@ class Instance
     }
 
     /**
-     * @return TableContainer
+     * @return string
      */
-    public function getTableContainer()
+    public function getDbSchemaName()
     {
-        return $this->tableContainer;
+        return $this->dbSchemaName;
     }
 }
