@@ -19,6 +19,14 @@ interface AdapterInterface
      */
     public function query($sql, $parameters = []);
 
+
+    /**
+     * Quote string.
+     * @param string $value Value to be quoted
+     * @return string Quoted string
+     */
+    public function quote($value);
+
     /**
      * Fetch one row from result set.
      * @param string $sql SQL query string
@@ -42,6 +50,14 @@ interface AdapterInterface
      * @return mixed
      */
     public function fetchColumn($sql, $parameters = []);
+
+    /**
+     * Fetch array of requested column values from result set.
+     * @param string $sql SQL query string
+     * @param array $parameters
+     * @return array
+     */
+    public function fetchColumnAll($sql, $parameters = []);
 
     /**
      * Fetch a two-column result into an array where the first column is a key and the second column

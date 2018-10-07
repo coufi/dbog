@@ -64,7 +64,28 @@ class AdapterPDO implements AdapterInterface
             $serverConfig->getDbHost() . ':' . $serverConfig->getDbPort()
         );
 
-        return new \PDO($dsn, $instanceConfig->getUser(), $instanceConfig->getPassword());
+        $pdo = new \PDO($dsn, $instanceConfig->getUser(), $instanceConfig->getPassword());
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        return $pdo;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function quote($val)
+    {
+        if (is_null($val))
+        {
+            return "'NULL'";
+        }
+
+        if (is_bool($val))
+        {
+            return $val ? 1 : 0;
+        }
+
+        return $this->pdo->quote($val);
     }
 
     /**
@@ -73,8 +94,7 @@ class AdapterPDO implements AdapterInterface
     public function query($sql, $parameters = [])
     {
         $sth = $this->pdo->prepare($sql);
-        $sth->execute();
-
+        $sth->execute($parameters);
         return $sth;
     }
 
@@ -103,6 +123,15 @@ class AdapterPDO implements AdapterInterface
     {
         $sth = $this->query($sql, $parameters);
         return $sth->fetch(\PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchColumnAll($sql, $parameters = [])
+    {
+        $sth = $this->query($sql, $parameters);
+        return $sth->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
