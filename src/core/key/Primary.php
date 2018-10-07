@@ -17,7 +17,7 @@ class Primary extends \Src\Core\Key
      */
     protected function setKeyName()
     {
-        $this->keyName = self::PRIMARY_PREFIX . $this->tableName;
+        $this->keyName = self::PRIMARY_PREFIX . $this->getTableName();
     }
 
     /**

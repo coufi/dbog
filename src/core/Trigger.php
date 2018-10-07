@@ -8,6 +8,9 @@ namespace Src\Core;
 
 class Trigger
 {
+    const TRIGGER_BEGIN = 'BEGIN';
+    const TRIGGER_END = 'END';
+
     const TIME_BEFORE = 'BEFORE';
     const TIME_AFTER = 'AFTER';
 
@@ -76,5 +79,20 @@ class Trigger
     public function getName()
     {
         return $this->triggerName;
+    }
+
+    /**
+     * Get SQL trigger body.
+     * @return string
+     */
+    public function getTriggerSQLBody()
+    {
+        $body = self::TRIGGER_BEGIN;
+        $body .= PHP_EOL;
+        $body .= $this->body;
+        $body .= PHP_EOL;
+        $body .= self::TRIGGER_END;
+
+        return $body;
     }
 }

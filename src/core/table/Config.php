@@ -171,7 +171,7 @@ class Config
      */
     protected function addKeyPrimary($columns)
     {
-        return $this->keyPrimary = new Primary($this->tableName, $columns);
+        return $this->keyPrimary = new Primary($this, $columns);
     }
 
     /**
@@ -181,7 +181,7 @@ class Config
      */
     public function addKeyUnique($columns)
     {
-        return $this->keyUnique[] = new Unique($this->tableName, $columns);
+        return $this->keyUnique[] = new Unique($this, $columns);
     }
 
     /**
@@ -191,7 +191,7 @@ class Config
      */
     public function addKeyIndex($columns)
     {
-        return $this->keyIndex[] = new Index($this->tableName, $columns);
+        return $this->keyIndex[] = new Index($this, $columns);
     }
 
     /**

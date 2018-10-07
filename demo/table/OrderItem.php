@@ -11,7 +11,7 @@ use Src\Core\Trigger;
 class OrderItem extends \Src\Core\Table
 {
     const COLUMN_ORDER_ID = 'id_order';
-    const COLUMN_PRODUCT_ID = 'id_productg';
+    const COLUMN_PRODUCT_ID = 'id_product';
     const COLUMN_TIMESTAMP = 'timestamp';
     const COLUMN_QUANTITY = 'quantity';
     const COLUMN_PRICE = 'price';
@@ -27,7 +27,7 @@ class OrderItem extends \Src\Core\Table
         $config = $this->createConfig();
         $config->addPrimary()->setIntUnsigned();
         $config->addColumn(self::COLUMN_ORDER_ID)              ->setFK();
-        $config->addColumn(self::COLUMN_PRODUCT_ID)            ->setFK('product');
+        $config->addColumn(self::COLUMN_PRODUCT_ID)            ->setFK();
         $config->addColumn(self::COLUMN_TIMESTAMP)             ->setDatetime();
         $config->addColumn(self::COLUMN_QUANTITY)              ->setSmallIntUnsigned()  ->setDefault('1');
         $config->addColumn(self::COLUMN_PRICE)                 ->setDecimalSigned(19, 4)    ->setNull();

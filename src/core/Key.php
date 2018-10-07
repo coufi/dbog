@@ -6,12 +6,14 @@
 namespace Src\Core;
 
 
+use Src\Core\Table\Config;
+
 abstract class Key
 {
     const MAX_KEY_NAME_LENGTH = 63;
 
-    /**  @var string */
-    protected $tableName;
+    /**  @var Config */
+    protected $table;
 
     /** @var string */
     protected $keyName;
@@ -20,12 +22,12 @@ abstract class Key
     protected $columns;
 
     /**
-     * @param $tableName string
-     * @param $columns array
+     * @param Config $table
+     * @param array $columns
      */
-    public function __construct($tableName, $columns)
+    public function __construct($table, $columns)
     {
-        $this->tableName = $tableName;
+        $this->table = $table;
         $this->columns = $columns;
 
         $this->setKeyName();
@@ -58,6 +60,22 @@ abstract class Key
     }
 
     /**
+     * Get column instances.
+     * @return Column[]
+     */
+    public function getColumnInstances()
+    {
+        $columns = [];
+        foreach ($this->columns as $column)
+        {
+            $columns[] = $this->table->getColumn($column);
+        }
+
+
+        return $columns;
+    }
+
+    /**
      * Get key name.
      * @return string
      */
@@ -72,7 +90,16 @@ abstract class Key
      */
     public function getTableName()
     {
-        return $this->tableName;
+        return $this->table->getName();
+    }
+
+    /**
+     * Get table config.
+     * @return Config
+     */
+    public function getTable()
+    {
+        return $this->table;
     }
 
     /**

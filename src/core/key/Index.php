@@ -18,7 +18,7 @@ class Index extends \Src\Core\Key
      */
     protected function setKeyName()
     {
-        $this->keyName = substr(self::INDEX_PREFIX . $this->tableName . '_' . implode('_', $this->columns), 0, self::MAX_KEY_NAME_LENGTH);
+        $this->keyName = substr(self::INDEX_PREFIX . $this->getTableName() . '_' . implode('_', $this->columns), 0, self::MAX_KEY_NAME_LENGTH);
     }
 
     /**
