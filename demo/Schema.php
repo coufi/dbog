@@ -14,6 +14,8 @@ class Schema extends DbSchema
         $this->addTable(Table\Order::class);
         $this->addTable(Table\OrderItem::class);
         $this->addTable(Table\Product::class);
+
+        $this->addView(View\SalesOverview::class);
     }
 }
 

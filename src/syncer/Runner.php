@@ -18,6 +18,7 @@ use Src\Core\Schema;
 use Src\Core\Table;
 use Src\Core\Table\Config;
 use Src\Core\Trigger;
+use Src\Core\View;
 use Src\Database\AdapterInterface;
 use Src\Logger;
 
@@ -31,6 +32,9 @@ class Runner
 
     /** @var Table[] */
     protected $tables;
+
+    /** @var View[] */
+    protected $views;
 
     /** @var string */
     protected $dbSchemaName;
@@ -52,6 +56,7 @@ class Runner
         $this->db = $db;
         $this->schema = $schema;
         $this->tables = $this->schema->getAllTables();
+        $this->views = $this->schema->getAllViews();
         $this->dbSchemaName = $dbSchemaName;
     }
 
@@ -87,6 +92,7 @@ class Runner
         // first mapping sync before table changes
         $this->syncMappings(true);
         $this->syncTables();
+        $this->syncViews();
         // final mapping sync after table changes
         $this->syncMappings();
         // enable a foreign key constraint
@@ -248,6 +254,69 @@ WHERE `T`.`TABLE_SCHEMA` = '{$this->dbSchemaName}' AND `T`.`TABLE_NAME` = '$tabl
         }
 
         $this->syncTableTriggers($tableConfig);
+    }
+
+    /**
+     * Sync views with database
+     */
+    protected function syncViews()
+    {
+        $q = "
+SELECT `V`.`TABLE_NAME` AS name
+FROM `information_schema`.`VIEWS` AS `V`
+WHERE `V`.`TABLE_SCHEMA` = '$this->dbSchemaName'";
+
+        $dbViews = [];
+        $rs = $this->db->fetchAll($q);
+        foreach ($rs as $r)
+        {
+            $dbViews[$r['name']] = '';
+        }
+
+        foreach ($this->views as $name => $view)
+        {
+            $this->syncView($view->getConfiguration());
+            unset ($dbViews[$name]);
+        }
+
+        foreach ($dbViews as $name => $dummy)
+        {
+            $this->log("SYNC: Removing view $name.");
+            $this->processQuery("DROP VIEW `$name`");
+        }
+    }
+
+    /**
+     * @param View\Config $view
+     */
+    public function syncView($view)
+    {
+        $q = "
+SELECT `V`.`VIEW_DEFINITION` AS definition
+FROM `information_schema`.`VIEWS` AS `V`
+WHERE `V`.`TABLE_SCHEMA` = '{$this->dbSchemaName}' AND `V`.`TABLE_NAME` = '{$view->getName()}'";
+
+        $r = $this->db->fetch($q);
+        if ($r)
+        {
+
+            //Definition from information schema has unusable format (includes db name)
+            $r = $this->db->fetch("SHOW CREATE VIEW `{$view->getName()}`");
+            $dbDefinition = $r['Create View'];
+            $parts = explode("VIEW `{$view->getName()}` AS ", $dbDefinition, 2);
+            $dbDefinition = $parts[1];
+
+            if ($dbDefinition != $view->getQuery())
+            {
+                $this->log("SYNC: Changing view {$view->getName()} query.");
+                $this->processQuery("ALTER VIEW {$view->getName()} AS {$view->getQuery()}");
+            }
+        }
+        else
+        {
+            $this->log("SYNC: Creating view {$view->getName()}.");
+            $this->processQuery("CREATE VIEW {$view->getName()} AS {$view->getQuery()}");
+        }
     }
 
 

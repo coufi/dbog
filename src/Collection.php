@@ -6,12 +6,15 @@
 namespace Src;
 
 
+use Src\Core\Entity;
+use Src\Core\View;
+
 class Collection
 {
     /** @var \Closure[] */
     protected $callbacks = [];
 
-    /** @var Table[] */
+    /** @var Table[]|View[] */
     protected $instatiated = [];
 
     /**
@@ -30,8 +33,8 @@ class Collection
      */
     public function add($className)
     {
-        /** @var $className Table */
-        $itemName = $className::getTableLabel();
+        /** @var $className Entity */
+        $itemName = $className::getLabel();
 
         $this->callbacks[$itemName] = function() use ($className) { return new $className($this); };
     }
@@ -39,7 +42,7 @@ class Collection
     /**
      * Get instance.
      * @param string $itemName
-     * @return Table|null
+     * @return Table|View|null
      */
     public function get($itemName)
     {
@@ -62,7 +65,7 @@ class Collection
 
     /**
      * Get all instances.
-     * @return Table[]
+     * @return Table[]|View[]
      */
     public function getAll()
     {

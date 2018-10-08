@@ -8,7 +8,7 @@ namespace Src\Core;
 
 use Src\Core\Table\Config;
 
-abstract class Table
+abstract class Table extends Entity
 {
     /** @var string */
     protected $tableName;
@@ -24,22 +24,8 @@ abstract class Table
      */
     public function __construct($tableContainer)
     {
-        $this->tableName = self::getTableLabel();
+        $this->tableName = self::getLabel();
         $this->tableContainer = $tableContainer;
-    }
-
-    /**
-     * Get table name without class instantiating.
-     * @return string
-     */
-    public static function getTableLabel()
-    {
-        // remove namespace string from called class
-        $className = explode('\\', get_called_class());
-        $className = end( $className);
-
-        // convert camelcase class name to snake case table name
-        return ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $className)), '_');
     }
 
     /**
@@ -61,7 +47,7 @@ abstract class Table
     }
 
     /**
-     * Inicialize full configuration for table.
+     * Initialize full configuration for table.
      * @return Config
      */
     protected abstract function initConfiguration();

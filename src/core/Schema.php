@@ -14,8 +14,11 @@ abstract class Schema
     const DB_CHARSET_UTF8 = 'utf8';
     const DB_COLLATION_UTF8_GENERAL_CI = 'utf8_general_ci';
 
-    /** @var Collection[] */
-    protected $tables = [];
+    /** @var Collection */
+    protected $tables;
+
+    /** @var Collection */
+    protected $views;
 
     /** @var  string */
     protected $dbCharset = self::DB_CHARSET_UTF8;
@@ -29,6 +32,7 @@ abstract class Schema
     public function __construct()
     {
         $this->tables = new Collection();
+        $this->views = new Collection();
     }
 
     /**
@@ -129,5 +133,52 @@ abstract class Schema
     public function getAllTables()
     {
         return $this->tables->getAll();
+    }
+
+    /**
+     * Whether has view.
+     * @param string $viewName
+     * @return bool
+     */
+    public function hasView($viewName)
+    {
+        return $this->views->has($viewName);
+    }
+
+    /**
+     * Add new view callback.
+     * @param string $className
+     */
+    public function addView($className)
+    {
+        $this->views->add($className);
+    }
+
+    /**
+     * Get view instance.
+     * @param string $viewName
+     * @return View|null
+     */
+    public function getView($viewName)
+    {
+        return $this->views->get($viewName);
+    }
+
+    /**
+     * Get all registered view names
+     * @return array
+     */
+    public function getViewNames()
+    {
+        return $this->views->getItemKeys();
+    }
+
+    /**
+     * Get all instances.
+     * @return View[]
+     */
+    public function getAllViews()
+    {
+        return $this->views->getAll();
     }
 }
