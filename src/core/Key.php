@@ -8,7 +8,7 @@ namespace Src\Core;
 
 use Src\Core\Table\Config;
 
-abstract class Key
+abstract class Key implements ValidableInterface
 {
     const MAX_KEY_NAME_LENGTH = 63;
 
@@ -31,6 +31,14 @@ abstract class Key
         $this->columns = $columns;
 
         $this->setKeyName();
+    }
+
+    /**
+     *  Validate key.
+     */
+    public function validate()
+    {
+        // do nothing
     }
 
     /**

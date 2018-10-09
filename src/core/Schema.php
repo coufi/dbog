@@ -9,7 +9,7 @@ namespace Src\Core;
 use Src\Collection;
 use Src\Exceptions\SyncerException;
 
-abstract class Schema
+abstract class Schema implements ValidableInterface
 {
     const ENGINE_INNODB = 'innodb';
     const DB_CHARSET_UTF8 = 'utf8';

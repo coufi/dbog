@@ -8,7 +8,7 @@ namespace Src\Core;
 
 use Src\Core\Table\Config;
 
-abstract class Relation
+abstract class Relation implements ValidableInterface
 {
     /** @var string */
     protected $tableName;
@@ -36,7 +36,15 @@ abstract class Relation
     }
 
     /**
-     * Set relation name
+     *  Validate relation.
+     */
+    public function validate()
+    {
+        // do nothing
+    }
+
+    /**
+     * Set relation name.
      */
     protected function setRelationName()
     {
@@ -44,7 +52,7 @@ abstract class Relation
     }
 
     /**
-     * Get reference
+     * Get reference.
      * @return string
      */
     public function getReference()
@@ -53,7 +61,7 @@ abstract class Relation
     }
 
     /**
-     * Get name
+     * Get name.
      * @return string
      */
     public function getName()

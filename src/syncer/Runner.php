@@ -84,7 +84,9 @@ class Runner
      */
     public function syncStructure()
     {
+        $this->log("Validate database structure.");
         $this->schema->validate();
+        $this->log("Database structure valid.");
 
         $this->log("Syncing database structure.");
         $this->processQuery("USE `$this->dbSchemaName`", true);

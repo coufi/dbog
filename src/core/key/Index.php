@@ -5,6 +5,8 @@
 
 namespace Src\Core\Key;
 
+use Src\Exceptions\SyncerException;
+
 class Index extends \Src\Core\Key
 {
     const INDEX_PREFIX = 'ix_';
@@ -39,5 +41,21 @@ class Index extends \Src\Core\Key
     public function getPrefixLength($column)
     {
         return isset ($this->lengths[$column]) ? $this->lengths[$column] : null;
+    }
+
+    /**
+     *  Validate index key.
+     * @throws SyncerException
+     */
+    public function validate()
+    {
+        $columns = $this->table->getColumns();
+        foreach ($this->getColumns() as $columnName)
+        {
+            if (!isset ($columns[$columnName]))
+            {
+                throw new SyncerException("Indexed column {$columnName} not found in table {$this->getTableName()}");
+            }
+        }
     }
 }

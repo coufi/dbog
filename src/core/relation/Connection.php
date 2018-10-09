@@ -6,6 +6,8 @@
 namespace Src\Core\Relation;
 
 
+use Src\Exceptions\SyncerException;
+
 class Connection extends \Src\Core\Relation
 {
     /**
@@ -39,5 +41,26 @@ class Connection extends \Src\Core\Relation
     public function getConnecting()
     {
         return $this->connecting;
+    }
+
+    /**
+     * Validate existing reference and connecting tables.
+     * @throws SyncerException
+     */
+    public function validate()
+    {
+        $tableContainer = $this->getTable()->getTableContainer();
+
+        // validate existing reference to target table
+        if (!$tableContainer->has($this->getReference()))
+        {
+            throw new SyncerException("Connection reference from table {$this->tableName} to {$this->reference} not found");
+        }
+
+        // validate existing connecting table
+        if (!$tableContainer->has($this->getConnecting()))
+        {
+            throw new SyncerException("Connecting table {$this->getConnecting()} defined in {$this->tableName} table not found");
+        }
     }
 }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * dbog .../src/database/AdapterInterface.php
+ */
 
 namespace Src\Database;
 

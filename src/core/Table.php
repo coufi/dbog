@@ -9,7 +9,7 @@ namespace Src\Core;
 use Src\Core\Table\Config;
 use Src\Exceptions\SyncerException;
 
-abstract class Table extends Entity
+abstract class Table extends Entity implements ValidableInterface
 {
     /** @var string */
     protected $tableName;
@@ -74,6 +74,7 @@ abstract class Table extends Entity
     /**
      * Validate table's keys and relations
      * @throws SyncerException
+     * @todo Advanced validation implementation, if necessary check relation columns datatypes, check relation columns unique indexes, etc.
      */
     public function validate()
     {
@@ -83,6 +84,42 @@ abstract class Table extends Entity
         foreach ($config->getRelationsMapping() as $mapping)
         {
             $mapping->validate();
+        }
+
+        // validate connections
+        foreach ($config->getRelationsConnection() as $connection)
+        {
+            $connection->validate();
+        }
+
+        // validate extensions
+        foreach ($config->getRelationsExtension() as $extension)
+        {
+            $extension->validate();
+        }
+
+        // validate mappeds
+        foreach ($config->getRelationsMapped() as $mapped)
+        {
+            $mapped->validate();
+        }
+
+        // validate unique keys
+        foreach ($config->getKeysUnique() as $unique)
+        {
+            $unique->validate();
+        }
+
+        // validate index keys
+        foreach ($config->getKeysIndex() as $index)
+        {
+            $index->validate();
+        }
+
+        // validate pk
+        if (!$config->getKeyPrimary())
+        {
+            throw new SyncerException("Missing primary key in table {$this->tableName}");
         }
     }
 }
