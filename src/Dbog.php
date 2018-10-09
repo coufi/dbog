@@ -8,6 +8,7 @@ namespace Src;
 
 use Src\Database\AdapterPDO;
 use Src\Database\Instance;
+use Src\Exceptions\SyncerException;
 use Src\Syncer\Runner;
 
 class Dbog
@@ -52,7 +53,11 @@ class Dbog
                 $runner->syncStructure();
             }
         }
-        catch(\Exception $exception)
+        catch (SyncerException $exception)
+        {
+            $this->logger->logMessage('Syncer error: ' . $exception->getMessage());
+        }
+        catch (\Exception $exception)
         {
             $this->logger->logMessage('Connection error: ' . $exception->getMessage());
         }

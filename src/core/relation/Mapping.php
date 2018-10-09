@@ -7,6 +7,7 @@ namespace Src\Core\Relation;
 
 
 use Src\Core\Key;
+use Src\Exceptions\SyncerException;
 
 class Mapping extends \Src\Core\Relation
 {
@@ -32,14 +33,14 @@ class Mapping extends \Src\Core\Relation
      * @param array $columns
      * @param array $targets
      */
-    public function __construct($tableName, $reference, $columns, $targets = [])
+    public function __construct($table, $reference, $columns, $targets = [])
     {
         $this->columns = $columns;
         $this->targets = $targets;
         $this->onUpdateAction = self::NO_ACTION;
         $this->onDeleteAction = self::NO_ACTION;
 
-        parent::__construct($tableName, $reference);
+        parent::__construct($table, $reference);
     }
 
 
@@ -108,5 +109,40 @@ class Mapping extends \Src\Core\Relation
     public function getOnDeleteAction()
     {
         return $this->onDeleteAction;
+    }
+
+    /**
+     * Validate existing reference table, existing columns, existing target columns
+     * @throws SyncerException
+     */
+    public function validate()
+    {
+        $tableContainer = $this->getTable()->getTableContainer();
+
+        // validate existing reference to target table
+        if (!$tableContainer->has($this->getReference()))
+        {
+            throw new SyncerException("Mapping reference from table {$this->tableName} to {$this->reference} not found");
+        }
+
+        // validate existing columns
+        $columns = $this->getTable()->getColumns();
+        foreach ($this->getColumns() as $columnName)
+        {
+            if (!isset ($columns[$columnName]))
+            {
+                throw new SyncerException("Mapping column $columnName not found in table {$this->tableName}");
+            }
+        }
+
+        // validate existing target columns
+        $targetTableColumns = $tableContainer->get($this->getReference())->getConfiguration()->getColumns();
+        foreach ($this->getTargets() as $target)
+        {
+            if (!isset ($targetTableColumns[$target]))
+            {
+                throw new SyncerException("Mapping target {$target} not found in mapping from table {$this->tableName} to table {$this->getReference()}");
+            }
+        }
     }
 }

@@ -7,20 +7,21 @@ namespace Src\Core;
 
 
 use Src\Core\Table\Config;
+use Src\Exceptions\SyncerException;
 
 abstract class Table extends Entity
 {
     /** @var string */
     protected $tableName;
 
-    /** @var TableContainer */
+    /** @var Collection */
     protected $tableContainer;
 
     /** @var Config */
     protected $configCache;
 
     /**
-     * @param TableContainer $tableContainer
+     * @param Collection $tableContainer
      */
     public function __construct($tableContainer)
     {
@@ -39,7 +40,7 @@ abstract class Table extends Entity
 
     /**
      * Get table container.
-     * @return TableContainer
+     * @return Collection
      */
     public function getTableContainer()
     {
@@ -68,5 +69,20 @@ abstract class Table extends Entity
     protected function createConfig()
     {
         return new Config($this->tableName, $this->tableContainer);
+    }
+
+    /**
+     * Validate table's keys and relations
+     * @throws SyncerException
+     */
+    public function validate()
+    {
+        $config = $this->getConfiguration();
+
+        // validate mappings
+        foreach ($config->getRelationsMapping() as $mapping)
+        {
+            $mapping->validate();
+        }
     }
 }

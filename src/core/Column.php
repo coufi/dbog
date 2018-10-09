@@ -106,8 +106,17 @@ class Column
 
         $targetColumnName = Config::ID_PREFIX . $tableName;
         $this->table->addRelationMapping($tableName, [$this->columnName], [$targetColumnName]);
-        $targetColumn = $this->table->getTableContainer()->get($tableName)->getConfiguration()->getColumn($targetColumnName);
-        $this->setDatatype($targetColumn->getDatatype());
+
+        if ($this->table->getTableContainer()->has($tableName))
+        {
+            $targetColumn = $this->table->getTableContainer()->get($tableName)->getConfiguration()->getColumn($targetColumnName);
+            $this->setDatatype($targetColumn->getDatatype());
+        }
+        else
+        {
+            // set default datatype if target cannot be found
+            $this->setIntUnsigned();
+        }
 
         return $this;
     }

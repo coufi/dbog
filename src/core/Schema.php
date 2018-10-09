@@ -7,6 +7,7 @@ namespace Src\Core;
 
 
 use Src\Collection;
+use Src\Exceptions\SyncerException;
 
 abstract class Schema
 {
@@ -39,6 +40,18 @@ abstract class Schema
      * Register all required classes.
      */
     abstract public function init();
+
+    /**
+     * Validate all tables for their keys and relations
+     * @throws SyncerException
+     */
+    public function validate()
+    {
+        foreach ($this->getAllTables() as $tableName => $table)
+        {
+            $table->validate();
+        }
+    }
 
     /**
      * @param string $dbCharset

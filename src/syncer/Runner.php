@@ -20,6 +20,7 @@ use Src\Core\Table\Config;
 use Src\Core\Trigger;
 use Src\Core\View;
 use Src\Database\AdapterInterface;
+use Src\Exceptions\SyncerException;
 use Src\Logger;
 
 class Runner
@@ -79,13 +80,15 @@ class Runner
 
     /**
      * Sync whole database structure.
+     * @throws SyncerException
      */
     public function syncStructure()
     {
+        $this->schema->validate();
+
         $this->log("Syncing database structure.");
         $this->processQuery("USE `$this->dbSchemaName`", true);
         $this->log("SYNC: Switching to schema $this->dbSchemaName.");
-
         $this->syncSchema();
         // temporarily disable a foreign key constraint
         $this->foreignKeyChecks(false);

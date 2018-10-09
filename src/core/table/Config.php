@@ -13,7 +13,7 @@ use Src\Core\Relation\Connection;
 use Src\Core\Relation\Extension;
 use Src\Core\Relation\Mapped;
 use Src\Core\Relation\Mapping;
-use Src\Core\TableContainer;
+use Src\Collection;
 use Src\Core\Trigger;
 
 class Config
@@ -24,7 +24,7 @@ class Config
     /**  @var string */
     protected $tableName;
 
-    /**  @var TableContainer */
+    /**  @var Collection */
     protected $tableContainer;
 
     /**  @var string  */
@@ -59,7 +59,7 @@ class Config
 
     /**
      * @param string $tableName
-     * @param TableContainer $tableContainer
+     * @param Collection $tableContainer
      */
     public function __construct($tableName, $tableContainer)
     {
@@ -88,7 +88,7 @@ class Config
 
     /**
      * Get table container.
-     * @return TableContainer
+     * @return Collection
      */
     public function getTableContainer()
     {
@@ -130,7 +130,7 @@ class Config
         //Add key index automatically
         $this->addKeyIndex($columns);
 
-        return $this->relationMapping[] = new Mapping($this->tableName, $reference, $columns, $targets);
+        return $this->relationMapping[] = new Mapping($this, $reference, $columns, $targets);
     }
 
     /**
@@ -140,7 +140,7 @@ class Config
      */
     public function addRelationMapped($reference)
     {
-        return $this->relationMapped[] = new Mapped($this->tableName, $reference);
+        return $this->relationMapped[] = new Mapped($this, $reference);
     }
 
     /**
@@ -151,7 +151,7 @@ class Config
      */
     public function addRelationConnection($reference, $connecting)
     {
-        return $this->relationConnection[] = new Connection($this->tableName, $reference, $connecting);
+        return $this->relationConnection[] = new Connection($this, $reference, $connecting);
     }
 
     /**
@@ -161,7 +161,7 @@ class Config
      */
     public function addRelationExtension($reference)
     {
-        return $this->relationExtension[$reference] = new Extension($this->tableName, $reference);
+        return $this->relationExtension[$reference] = new Extension($this, $reference);
     }
 
     /**

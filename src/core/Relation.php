@@ -6,10 +6,15 @@
 namespace Src\Core;
 
 
+use Src\Core\Table\Config;
+
 abstract class Relation
 {
     /** @var string */
     protected $tableName;
+
+    /** @var Config */
+    protected $table;
 
     /** @var string */
     protected $relationName;
@@ -18,12 +23,13 @@ abstract class Relation
     protected $reference;
 
     /**
-     * @param string $tableName
+     * @param Config $table
      * @param string $reference
      */
-    public function __construct($tableName, $reference)
+    public function __construct($table, $reference)
     {
-        $this->tableName = $tableName;
+        $this->tableName = $table->getName();
+        $this->table = $table;
         $this->reference = $reference;
 
         $this->setRelationName();
@@ -53,5 +59,14 @@ abstract class Relation
     public function getName()
     {
         return $this->relationName;
+    }
+
+    /**
+     * Get table config.
+     * @return Config
+     */
+    public function getTable()
+    {
+        return $this->table;
     }
 }
