@@ -7,6 +7,7 @@ namespace Src\Core;
 
 
 use Src\Core\Table\Config;
+use Src\Syncer\Runner;
 
 abstract class Key implements ValidableInterface
 {
@@ -37,6 +38,15 @@ abstract class Key implements ValidableInterface
      *  Validate key.
      */
     public function validate()
+    {
+        // do nothing
+    }
+
+    /**
+     *  Sync key with database.
+     * @param Runner $runner
+     */
+    public function sync($runner)
     {
         // do nothing
     }
@@ -81,6 +91,34 @@ abstract class Key implements ValidableInterface
 
 
         return $columns;
+    }
+
+    /**
+     * Get SQL create statement.
+     * @return string
+     */
+    public abstract function getSQLCreate();
+
+    /**
+     * Get string with list of columns for SQL statement.
+     * @return string
+     */
+    protected function getColumnsListToSQL()
+    {
+        $columnsList = [];
+        foreach ($this->getColumns() as $i => $column)
+        {
+            $prefixLength = '';
+            // prefix lenght used for index key, otherwise is null
+            if ($length = $this->getPrefixLength($column))
+            {
+                $prefixLength = "($length)";
+            }
+
+            $columnsList[] = "`$column`$prefixLength";
+        }
+
+        return implode(', ', $columnsList) ;
     }
 
     /**

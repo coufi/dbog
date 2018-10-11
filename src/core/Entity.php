@@ -9,6 +9,26 @@ use \Src\Core as Core;
 
 abstract class Entity
 {
+    /** @var Schema */
+    protected $schema;
+
+    /**
+     * @param Schema $schema
+     */
+    public function __construct($schema)
+    {
+        $this->schema = $schema;
+    }
+
+    /**
+     * Get schema.
+     * @return Schema
+     */
+    public function getSchema()
+    {
+        return $this->schema;
+    }
+
     /**
      * Get entity configuration.
      * @return Core\Table\Config|Core\View\Config

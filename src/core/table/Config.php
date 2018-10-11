@@ -13,19 +13,18 @@ use Src\Core\Relation\Connection;
 use Src\Core\Relation\Extension;
 use Src\Core\Relation\Mapped;
 use Src\Core\Relation\Mapping;
-use Src\Collection;
+use Src\Core\Schema;
 use Src\Core\Trigger;
 
 class Config
 {
-
     const ID_PREFIX = 'id_';
 
     /**  @var string */
     protected $tableName;
 
-    /**  @var Collection */
-    protected $tableContainer;
+    /**  @var Schema */
+    protected $schema;
 
     /**  @var string  */
     protected $renamedFrom;
@@ -59,12 +58,12 @@ class Config
 
     /**
      * @param string $tableName
-     * @param Collection $tableContainer
+     * @param Schema $schema
      */
-    public function __construct($tableName, $tableContainer)
+    public function __construct($tableName, $schema)
     {
         $this->tableName = $tableName;
-        $this->tableContainer = $tableContainer;
+        $this->schema = $schema;
         $this->columns = [];
         $this->triggers = [];
         $this->relationMapping = [];
@@ -87,12 +86,23 @@ class Config
     }
 
     /**
-     * Get table container.
-     * @return Collection
+     * Get table name in db - shortcut method.
+     * @param bool $initialPhase Whether table has been udpdated in db already
+     * @return string
      */
-    public function getTableContainer()
+    public function getDbTableName($initialPhase = false)
     {
-        return $this->tableContainer;
+        $renamed = $this->renamedFrom !== null;
+        return $initialPhase && $renamed ? $this->renamedFrom : $this->tableName;
+    }
+
+    /**
+     * Get schema.
+     * @return Schema
+     */
+    public function getSchema()
+    {
+        return $this->schema;
     }
 
     /**
@@ -231,6 +241,24 @@ class Config
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * Get column names.
+     * @return array
+     */
+    public function getColumnNames()
+    {
+        return array_keys($this->columns);
+    }
+
+    /**
+     * Get column ordinal position.
+     * @return array [(string) $columnName => (int) $ordinalPosition,...] Starts from 0
+     */
+    public function getColumnOrdinalPositions()
+    {
+        return array_flip($this->getColumnNames());
     }
 
     /**

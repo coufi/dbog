@@ -7,15 +7,27 @@ namespace Src;
 
 
 use Src\Core\Entity;
+use Src\Core\Schema;
 use Src\Core\View;
 
 class Collection
 {
+    /** @var Schema */
+    protected $schema;
+
     /** @var \Closure[] */
     protected $callbacks = [];
 
     /** @var Table[]|View[] */
     protected $instatiated = [];
+
+    /**
+     * @param Schema $schema
+     */
+    public function __construct($schema)
+    {
+        $this->schema = $schema;
+    }
 
     /**
      * Whether has instance.
@@ -36,7 +48,7 @@ class Collection
         /** @var $className Entity */
         $itemName = $className::getLabel();
 
-        $this->callbacks[$itemName] = function() use ($className) { return new $className($this); };
+        $this->callbacks[$itemName] = function() use ($className) { return new $className($this->schema); };
     }
 
     /**

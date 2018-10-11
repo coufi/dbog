@@ -49,16 +49,16 @@ class Connection extends \Src\Core\Relation
      */
     public function validate()
     {
-        $tableContainer = $this->getTable()->getTableContainer();
+        $schema = $this->getTable()->getSchema();
 
         // validate existing reference to target table
-        if (!$tableContainer->has($this->getReference()))
+        if (!$schema->hasTable($this->getReference()))
         {
             throw new SyncerException("Connection reference from table {$this->tableName} to {$this->reference} not found");
         }
 
         // validate existing connecting table
-        if (!$tableContainer->has($this->getConnecting()))
+        if (!$schema->hasTable($this->getConnecting()))
         {
             throw new SyncerException("Connecting table {$this->getConnecting()} defined in {$this->tableName} table not found");
         }

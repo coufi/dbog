@@ -7,6 +7,7 @@ namespace Src\Core;
 
 
 use Src\Core\Table\Config;
+use Src\Syncer\Runner;
 
 abstract class Relation implements ValidableInterface
 {
@@ -39,6 +40,15 @@ abstract class Relation implements ValidableInterface
      *  Validate relation.
      */
     public function validate()
+    {
+        // do nothing
+    }
+
+    /**
+     *  Sync relation with database.
+     * @param Runner $runner
+     */
+    public function sync($runner)
     {
         // do nothing
     }

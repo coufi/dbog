@@ -7,6 +7,7 @@ namespace Src\Core\Relation;
 
 
 use Src\Core\Key;
+use Src\Database\AdapterInterface;
 use Src\Exceptions\SyncerException;
 
 class Mapping extends \Src\Core\Relation
@@ -117,10 +118,10 @@ class Mapping extends \Src\Core\Relation
      */
     public function validate()
     {
-        $tableContainer = $this->getTable()->getTableContainer();
+        $schema = $this->getTable()->getSchema();
 
         // validate existing reference to target table
-        if (!$tableContainer->has($this->getReference()))
+        if (!$schema->hasTable($this->getReference()))
         {
             throw new SyncerException("Mapping reference from table {$this->tableName} to {$this->reference} not found");
         }
@@ -136,7 +137,7 @@ class Mapping extends \Src\Core\Relation
         }
 
         // validate existing target columns
-        $targetTableColumns = $tableContainer->get($this->getReference())->getConfiguration()->getColumns();
+        $targetTableColumns = $schema->getTable($this->getReference())->getConfiguration()->getColumns();
         foreach ($this->getTargets() as $target)
         {
             if (!isset ($targetTableColumns[$target]))
@@ -144,5 +145,95 @@ class Mapping extends \Src\Core\Relation
                 throw new SyncerException("Mapping target {$target} not found in mapping from table {$this->tableName} to table {$this->getReference()}");
             }
         }
+    }
+
+    /**
+     * Get information schema from database.
+     * @param AdapterInterface $db
+     * @param string $dbSchemaName
+     * @return array ['table_name' => (string), 'ref_table_name' => (string), 'delete_rule' => (string), 'update_rule' => (string)]
+     */
+    public function getInformationSchema($db, $dbSchemaName)
+    {
+        $query = "
+SELECT
+  `R`.`TABLE_NAME` AS table_name,
+  `R`.`REFERENCED_TABLE_NAME` AS ref_table_name,
+  `R`.`DELETE_RULE` AS delete_rule,
+  `R`.`UPDATE_RULE` AS update_rule
+FROM `INFORMATION_SCHEMA`.`REFERENTIAL_CONSTRAINTS` AS `R`
+WHERE `R`.`CONSTRAINT_SCHEMA` = '{$dbSchemaName}' AND `R`.`CONSTRAINT_NAME` = '{$this->getName()}'";
+        return $db->fetch($query);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sync($runner)
+    {
+        $informationSchema = $this->getInformationSchema($runner->getDb(), $runner->getDbSchemaName());
+
+        // found definition in information schema, check for changes
+        if ($informationSchema)
+        {
+            list ($tableName, $reference, $delete, $update) = $informationSchema;
+
+            $recreate = false;
+
+            // changed table name
+            if ($tableName != $this->tableName)
+            {
+                $recreate = true;
+            }
+
+            // changed reference table name
+            if ($reference != $this->getReference())
+            {
+                $recreate = true;
+            }
+
+            //changed on delete action
+            if ($delete != $this->getOnDeleteAction())
+            {
+                $recreate = true;
+            }
+
+            //changed on update action
+            if ($update != $this->getOnUpdateAction())
+            {
+                $recreate = true;
+            }
+
+            // definition has been changed, sync in db
+            if ($recreate)
+            {
+                $runner->log("SYNC: Recreating mapping {$this->getName()}.");
+                $runner->processQuery("ALTER TABLE {$tableName} DROP FOREIGN KEY {$this->getName()}");
+                $runner->processQuery("ALTER TABLE `{$this->tableName}` ADD ") . $this->getSQLCreate();
+            }
+        }
+        // definition not found, create new mapping relation
+        else
+        {
+            $runner->log("SYNC: Creating mapping {$this->getName()}.");
+            $runner->processQuery("ALTER TABLE `{$this->tableName}` ADD " . $this->getSQLCreate());
+        }
+    }
+
+    /**
+     * Get SQL create statement - mapping relation.
+     * @return string
+     */
+    protected function getSQLCreate()
+    {
+        $target = count($this->getTargets()) ? $this->getTargets() : $this->getColumns();
+        return
+            "CONSTRAINT `{$this->getName()}` FOREIGN KEY (`" .
+            implode('`, `', $this->getColumns()) .
+            "`) REFERENCES `{$this->getReference()}` (`" .
+            implode('`, `', $target) . '`)' .
+            " ON DELETE " . $this->getOnDeleteAction() .
+            " ON UPDATE " . $this->getOnUpdateAction();
     }
 }

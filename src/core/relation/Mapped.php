@@ -16,10 +16,10 @@ class Mapped extends \Src\Core\Relation
      */
     public function validate()
     {
-        $tableContainer = $this->getTable()->getTableContainer();
+        $schema = $this->getTable()->getSchema();
 
         // validate existing reference to target table
-        if (!$tableContainer->has($this->getReference()))
+        if (!$schema->hasTable($this->getReference()))
         {
             throw new SyncerException("Mapped table from {$this->tableName} to {$this->reference} not found");
         }

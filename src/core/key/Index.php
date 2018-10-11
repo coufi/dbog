@@ -5,7 +5,9 @@
 
 namespace Src\Core\Key;
 
+use Src\Database\AdapterInterface;
 use Src\Exceptions\SyncerException;
+use Src\Syncer\Runner;
 
 class Index extends \Src\Core\Key
 {
@@ -44,6 +46,15 @@ class Index extends \Src\Core\Key
     }
 
     /**
+     * Get SQL create statement.
+     * @return string
+     */
+    public function getSQLCreate()
+    {
+        return "INDEX `{$this->getName()}` (" . $this->getColumnsListToSQL() . ')';
+    }
+
+    /**
      *  Validate index key.
      * @throws SyncerException
      */
@@ -56,6 +67,68 @@ class Index extends \Src\Core\Key
             {
                 throw new SyncerException("Indexed column {$columnName} not found in table {$this->getTableName()}");
             }
+        }
+    }
+
+    /**
+     * Get information schema from database.
+     * @param AdapterInterface $db
+     * @param string $dbSchemaName
+     * @return array
+     */
+    protected function getInformationSchema($db, $dbSchemaName)
+    {
+        $query = "
+SELECT `S`.`COLUMN_NAME` AS name, `S`.`SUB_PART` AS length
+FROM `information_schema`.`STATISTICS` AS `S`
+WHERE `S`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `S`.`INDEX_NAME` = '{$this->getName()}'
+ORDER BY `S`.`SEQ_IN_INDEX`";
+
+        return $db->fetchAll($query);
+    }
+
+    /**
+     * Sync index key with database.
+     * @param Runner $runner
+     */
+    public function sync($runner)
+    {
+        $rs = $this->getInformationSchema($runner->getDb(), $runner->getDbSchemaName());
+        // found definition in information schema, check for changes
+        if ($rs)
+        {
+            $dbColumns = [];
+            $dbColumnLengths = [];
+            $recreate = false;
+            foreach ($rs as $r)
+            {
+                $dbColumns[] = $r['name'];
+                $dbColumnLengths[] = $r['length'];
+            }
+
+            // compare configuration with db definition
+            foreach ($this->getColumns() as $i => $column)
+            {
+                if ($dbColumns[$i] != $column || $this->getPrefixLength($column) != $dbColumnLengths[$i])
+                {
+                    $recreate = true;
+                    break;
+                }
+            }
+
+            // definition has been changed, sync in db
+            if ($recreate)
+            {
+                $runner->log("SYNC: Changing key index {$this->getName()}.");
+                $runner->processQuery("ALTER TABLE `{$this->getTableName()}` DROP INDEX `{$this->getName()}`");
+                $runner->processQuery("ALTER TABLE `{$this->getTableName()}` ADD " . $this->getIndexSQLCreate());
+            }
+        }
+        // definition not found, create new index
+        else
+        {
+            $runner->log("SYNC: Creating key index {$this->getName()}.");
+            $runner->processQuery("ALTER TABLE `{$this->tableName}` ADD " . $this->getIndexSQLCreate());
         }
     }
 }
