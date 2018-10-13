@@ -10,14 +10,14 @@ use Src\Core\Trigger;
 
 class OrderItem extends \Src\Core\Table
 {
-    const COLUMN_ORDER_ID = 'id_order';
+    const COLUMN_ORDER_ID   = 'id_order';
     const COLUMN_PRODUCT_ID = 'id_product';
-    const COLUMN_TIMESTAMP = 'timestamp';
-    const COLUMN_QUANTITY = 'quantity';
-    const COLUMN_PRICE = 'price';
-    const COLUMN_CONFIRMED = 'confirmed';
-    const COLUMN_CANCELED = 'canceled';
-    const COLUMN_NOTE = 'note';
+    const COLUMN_TIMESTAMP  = 'timestamp';
+    const COLUMN_QUANTITY   = 'quantity';
+    const COLUMN_PRICE      = 'price';
+    const COLUMN_CONFIRMED  = 'confirmed';
+    const COLUMN_CANCELED   = 'canceled';
+    const COLUMN_NOTE       = 'note';
 
     /**
      * {@inheritdoc }
