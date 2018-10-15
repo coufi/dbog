@@ -315,8 +315,15 @@ WHERE `T`.`TRIGGER_SCHEMA` = '{$dbSchemaName}' AND `T`.`EVENT_OBJECT_TABLE` = '{
             // changed table engine
             if (strtolower($engine) != $this->schema->getEngine())
             {
+                // always drop all constraints before engine change
+                $this->getConfiguration()->getKeyPrimary()->dropCurrentPrimaryKeyConstraints($runner);
+                $this->dropTableMappings($runner);
+
                 $runner->log("SYNC: Changing table {$this->tableName} engine to {$this->schema->getEngine()}.");
                 $runner->processQuery("ALTER TABLE `{$this->tableName}` ENGINE '{$this->schema->getEngine()}'");
+
+                // @todo future implementation - check whether specified engine supports FK constraint
+                $this->syncMappings($runner, false);
             }
 
             // changed db collation
@@ -372,6 +379,22 @@ WHERE `T`.`TRIGGER_SCHEMA` = '{$dbSchemaName}' AND `T`.`EVENT_OBJECT_TABLE` = '{
         }
 
         $this->syncTableTriggers($runner);
+    }
+
+    /**
+     * Drop all table mappings existing in db.
+     * @param Runner $runner
+     */
+    protected function dropTableMappings($runner)
+    {
+        $dbMappings = $this->getDbMappings($runner->getDb(), $runner->getDbSchemaName(), true);
+
+        // remove all mappings from db for this table
+        foreach (array_keys($dbMappings) as $name)
+        {
+            $runner->log("SYNC: Removing mapping {$name}.");
+            $runner->processQuery("ALTER TABLE `{$this->tableName}` DROP FOREIGN KEY {$name}");
+        }
     }
 
     /**

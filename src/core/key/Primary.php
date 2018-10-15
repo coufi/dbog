@@ -67,7 +67,7 @@ WHERE `TABLE_SCHEMA` = '{$runner->getDbSchemaName()}' AND `TABLE_NAME` = '{$this
         foreach ($currentPrimaryColumns as $columnName)
         {
             $column = $this->getTable()->getColumn($columnName);
-            $column->dropMapping($runner);
+            $column->dropConstraints($runner);
         }
     }
 

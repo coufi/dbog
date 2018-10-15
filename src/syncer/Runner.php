@@ -31,10 +31,17 @@ class Runner
      * @param AdapterInterface $db
      * @param Schema $schema
      * @param string $dbSchemaName
+     * @throws SyncerException
      */
     public function __construct($db, $schema, $dbSchemaName)
     {
         $this->db = $db;
+
+        if (!$schema)
+        {
+            throw new SyncerException('No schema has been defined.');
+        }
+
         $this->schema = $schema;
         $this->dbSchemaName = $dbSchemaName;
     }

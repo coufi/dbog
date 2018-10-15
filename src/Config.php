@@ -29,14 +29,17 @@ abstract class Config
 
     /**
      * @param Server $dbServer
-     * @param Schema $schema
      * @param string $user
      * @param string $password
      * @param string $dbSchemaName Database schema name
+     * @return Instance
      */
-    protected function addInstance($dbServer, $schema, $user, $password, $dbSchemaName)
+    protected function addInstance($dbServer, $user, $password, $dbSchemaName)
     {
-        $this->instances[] = new Instance($dbServer, $schema, $user, $password, $dbSchemaName);
+        $instance = new Instance($dbServer, $user, $password, $dbSchemaName);
+        $this->instances[] = $instance;
+
+        return $instance;
     }
 
     /**

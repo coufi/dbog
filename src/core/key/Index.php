@@ -121,14 +121,14 @@ ORDER BY `S`.`SEQ_IN_INDEX`";
             {
                 $runner->log("SYNC: Changing key index {$this->getName()}.");
                 $runner->processQuery("ALTER TABLE `{$this->getTableName()}` DROP INDEX `{$this->getName()}`");
-                $runner->processQuery("ALTER TABLE `{$this->getTableName()}` ADD " . $this->getIndexSQLCreate());
+                $runner->processQuery("ALTER TABLE `{$this->getTableName()}` ADD " . $this->getSQLCreate());
             }
         }
         // definition not found, create new index
         else
         {
             $runner->log("SYNC: Creating key index {$this->getName()}.");
-            $runner->processQuery("ALTER TABLE `{$this->tableName}` ADD " . $this->getIndexSQLCreate());
+            $runner->processQuery("ALTER TABLE `{$this->getTableName()}` ADD " . $this->getSQLCreate());
         }
     }
 }

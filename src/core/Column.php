@@ -650,7 +650,7 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
                     $aiInDb = $this->isAutoincrementalOnSync($runner->getDb(), $runner->getDbSchemaName(),  true);
                     if (!$aiInDb)
                     {
-                        $primary->dropCurrentPrimaryKeyConstraints();
+                        $primary->dropCurrentPrimaryKeyConstraints($runner);
                         $runner->processQuery("ALTER TABLE `{$this->table->getnName()}` DROP PRIMARY KEY");
                         $allowPrimaryKey = true;
                     }
@@ -660,7 +660,7 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
                 $changedColumn = $renameColumn ? " `{$this->getRenamedFrom()}` " : "`{$this->getName()}`";
 
                 $sql = $this->getSQLCreate($runner->getDb(), $allowPrimaryKey);
-                $this->processQuery("ALTER TABLE `{$this->table->getname()}` CHANGE $changedColumn $sql $columnPosition");
+                $runner->processQuery("ALTER TABLE `{$this->table->getname()}` CHANGE $changedColumn $sql $columnPosition");
             }
         }
         else
@@ -669,14 +669,14 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
             $primary = $this->getTable()->getKeyPrimary();
             if ($primary->isAutoincremental() && $primary->getColumns() == [$this->getName()])
             {
-                $primary->dropCurrentPrimaryKeyConstraints();
+                $primary->dropCurrentPrimaryKeyConstraints($runner);
                 $runner->processQuery("ALTER TABLE `{$this->getTable()->getName()}` DROP PRIMARY KEY");
             }
 
             $columnPosition = $ordinalPosition == 0 ? ' FIRST' : " AFTER `" . $columnsList[$ordinalPosition - 1] . "`";
             $runner->log("SYNC: Creating column {$this->getName()}.");
             $sql = $this->getSQLCreate($runner->getDb());
-            $this->processQuery("ALTER TABLE `{$this->getTable()->getName()}` ADD $sql $columnPosition");
+            $runner->processQuery("ALTER TABLE `{$this->getTable()->getName()}` ADD $sql $columnPosition");
         }
     }
 
@@ -737,8 +737,8 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = '{$table}' A
         {
             foreach ($constraints as $name)
             {
-                $this->log("SYNC: Dropping foreign key {$name}.");
-                $this->processQuery("ALTER TABLE `{$this->table->getName()}` DROP FOREIGN KEY {$name}");
+                $runner->log("SYNC: Dropping foreign key {$name}.");
+                $runner->processQuery("ALTER TABLE `{$this->table->getName()}` DROP FOREIGN KEY {$name}");
             }
         }
     }

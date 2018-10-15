@@ -22,18 +22,24 @@ class Instance
 
     /**
      * @param Server $dbServer
-     * @param Schema $schema
      * @param string $user Database user
      * @param string $password Database password
      * @param string $dbSchemaName Database schema name
      */
-    public function __construct($dbServer, $schema, $user, $password, $dbSchemaName)
+    public function __construct($dbServer, $user, $password, $dbSchemaName)
     {
         $this->dbServer = $dbServer;
-        $this->schema = $schema;
         $this->user = $user;
         $this->password = $password;
         $this->dbSchemaName = $dbSchemaName;
+    }
+
+    /**
+     * @param Schema
+     */
+    public function setSchema($schema)
+    {
+        $this->schema = $schema;
     }
 
     /**
@@ -45,7 +51,7 @@ class Instance
     }
 
     /**
-     * @return Schema
+     * @return null|Schema
      */
     public function getSchema()
     {

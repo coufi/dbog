@@ -6,7 +6,7 @@
 namespace Test;
 
 use \PHPUnit\Framework\TestCase AS TestCase;
-use Src\Core\TableContainer;
+use Src\Core\Schema;
 
 abstract class CoreTestCase extends TestCase
 {

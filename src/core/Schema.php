@@ -14,8 +14,13 @@ use Src\Syncer\Runner;
 abstract class Schema implements ValidableInterface
 {
     const ENGINE_INNODB = 'innodb';
+    const ENGINE_MYISAM = 'myisam';
+
     const DB_CHARSET_UTF8 = 'utf8';
+    const DB_CHARSET_ASCII = 'ascii';
+
     const DB_COLLATION_UTF8_GENERAL_CI = 'utf8_general_ci';
+    const DB_COLLATION_ASCII_GENERAL_CI = 'ascii_general_ci';
 
     /** @var Collection */
     protected $tables;
@@ -223,7 +228,7 @@ WHERE `V`.`TABLE_SCHEMA` = '$dbSchemaName'";
     /**
      * @param string $dbCharset
      */
-    protected function setDbCharset($dbCharset)
+    public function setDbCharset($dbCharset)
     {
         $this->dbCharset = $dbCharset;
     }
@@ -231,7 +236,7 @@ WHERE `V`.`TABLE_SCHEMA` = '$dbSchemaName'";
     /**
      * @param string $dbCollation
      */
-    protected function setDbCollation($dbCollation)
+    public function setDbCollation($dbCollation)
     {
         $this->dbCollation = $dbCollation;
     }
@@ -239,7 +244,7 @@ WHERE `V`.`TABLE_SCHEMA` = '$dbSchemaName'";
     /**
      * @param string $engine
      */
-    protected function setEngine($engine)
+    public function setEngine($engine)
     {
         $this->engine = $engine;
     }

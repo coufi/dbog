@@ -1,13 +1,13 @@
 <?php
 /**
- * dbog ...conf/ConfigExample.php
- * Can be renamed to Config.php, edited and used as application configuration
+ * dbog ...conf/ConfigTetExample.php
+ * Can be renamed to ConfigTest.php, edited and used as configuration file for syncer tests
  */
 
 namespace Conf;
 
 
-class ConfigExample extends \Src\Config
+class ConfigTestExample extends \Src\Config
 {
     public function __construct()
     {
@@ -20,8 +20,8 @@ class ConfigExample extends \Src\Config
         $this->addInstance(
             $server,
             'root',
-            'pwdexample',
-            'sync_schema'
+            'pwdtestexample',
+            'sync_test_schema'
         )->setSchema($this->createSchema(\Demo\Schema::class));
     }
 }
