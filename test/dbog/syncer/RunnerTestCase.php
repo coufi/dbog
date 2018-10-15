@@ -35,9 +35,27 @@ abstract class RunnerTestCase extends TestCase
         ob_start();
     }
 
-    protected function outputEndEquals($expectedOutput)
+    /**
+     * @param array|string $expectedOutput
+     * @param bool $queriesOnly Whether output contains only SQL query statements
+     */
+    protected function outputEndEquals($expectedOutput, $queriesOnly = false)
     {
         $output = ob_get_clean();
-        $this->assertEquals($output, $expectedOutput);
+
+        // add support for processing an array of lines
+        if (is_array($expectedOutput))
+        {
+            if ($queriesOnly)
+            {
+                $output = explode(";\t\n", trim($output, ";\t\n"));
+            }
+            else
+            {
+                $output = explode("\t\n", trim($output, "\t\n"));
+            }
+        }
+
+        $this->assertEquals($expectedOutput, $output);
     }
 }

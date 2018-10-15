@@ -13,6 +13,6 @@ class LoggerPrint extends Logger
      */
     protected function log($message)
     {
-        echo $message . PHP_EOL;
+        echo $message . "\t" . PHP_EOL;
     }
 }
