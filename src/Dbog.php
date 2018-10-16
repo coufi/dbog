@@ -69,6 +69,7 @@ class Dbog
      * @param Instance $instance
      * @param $dryRun bool
      * @return Runner
+     * @throws \Exception
      */
     protected function createSyncerRunner($instance, $dryRun)
     {
@@ -85,20 +86,22 @@ class Dbog
 
     /**
      * Print documentation on screen.
-     * @todo Final draft
      */
-    protected function printUsage()
+    public function printUsage()
     {
         echo <<<DOC
-
 Usage:
 ------
 
-*** TODO ***
-\n
+./dbog
+
+Parameters
+----------
+--output-queries                           - executed SQL queries are logged if specified (OPTIONAL)
+--dry-run                                  - SQL queries are NOT executed if specified (OPTIONAL)
+--verbose                                  - more detailed log output if specified (OPTIONAL)
+--help                                     - shows this help 
+
 DOC;
     }
-
-
-
 }

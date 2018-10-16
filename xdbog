@@ -1,0 +1,21 @@
+#!/usr/bin/php
+
+<?php
+require_once 'Autoloader.php';
+(new Autoloader())->init();
+
+$request = new \Src\Request(isset ($argv) ? $argv : []);
+
+$help = $request->getArgument('help', false);
+
+$dbog = new \Src\Dbog(new \Conf\Config(), new \Src\LoggerPrint());
+
+if ($help)
+{
+    $dbog->printUsage();
+}
+else
+{
+
+    $dbog->run($request->getArgument('output-queries', false),  $request->getArgument('verbose', false), $request->getArgument('dry-run', false));
+}
