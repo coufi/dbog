@@ -542,7 +542,7 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
 
             $recreate = false;
             $datatype = $this->getDatatype();
-            $renameColumn = !is_null($this->getRenamedFrom()) && $this->getRenamedFrom() != $dbName;
+            $renameColumn = !is_null($this->getRenamedFrom()) && $this->getRenamedFrom() == $dbName;
 
             // column has been renamed
             if ($renameColumn)
@@ -582,7 +582,7 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
             // changed nullable option
             if ($nullable == 'YES' && !$this->isNull() || $nullable == 'NO' && $this->isNull())
             {
-                $this->log("SYNC: Changing column {$this->getName()} nullability to " . ($this->isNull() ? 'YES' : 'NO') . '.');
+                $runner->log("SYNC: Changing column {$this->getName()} nullability to " . ($this->isNull() ? 'YES' : 'NO') . '.');
                 $recreate = true;
             }
 
@@ -657,7 +657,7 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
                 }
 
                 $columnPosition = $ordinalPosition == 0 ? ' FIRST' : " AFTER `" . $columnsList[$ordinalPosition - 1] . '`';
-                $changedColumn = $renameColumn ? " `{$this->getRenamedFrom()}` " : "`{$this->getName()}`";
+                $changedColumn = $renameColumn ? "`{$this->getRenamedFrom()}`" : "`{$this->getName()}`";
 
                 $sql = $this->getSQLCreate($runner->getDb(), $allowPrimaryKey);
                 $runner->processQuery("ALTER TABLE `{$this->table->getname()}` CHANGE $changedColumn $sql $columnPosition");
