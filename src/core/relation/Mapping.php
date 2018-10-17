@@ -10,6 +10,11 @@ use Src\Core\Key;
 use Src\Database\AdapterInterface;
 use Src\Exceptions\SyncerException;
 
+/**
+ * Class Mapping
+ * @package Src\Core\Relation
+ * Represents one-to-many relation and foreign key in database.
+ */
 class Mapping extends \Src\Core\Relation
 {
     const MAPPING_PREFIX = 'fk_';

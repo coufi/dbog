@@ -6,9 +6,11 @@
 namespace Src\Core\Table;
 
 use Src\Core\Column;
+use Src\Core\Key;
 use Src\Core\Key\Index;
 use Src\Core\Key\Primary;
 use Src\Core\Key\Unique;
+use Src\Core\Relation;
 use Src\Core\Relation\Connection;
 use Src\Core\Relation\Extension;
 use Src\Core\Relation\Mapped;
@@ -307,6 +309,15 @@ class Config
     }
 
     /**
+     * Get all relations.
+     * @return Relation[]
+     */
+    public function getRelations()
+    {
+        return array_merge($this->relationMapping, $this->relationMapped, $this->relationConnection, $this->relationExtension);
+    }
+
+    /**
      * Get key primary.
      * @return Primary
      */
@@ -331,6 +342,15 @@ class Config
     public function getKeysIndex()
     {
         return $this->keyIndex;
+    }
+
+    /**
+     * Get all keys.
+     * @return Key[]
+     */
+    public function getKeys()
+    {
+        return array_merge([$this->keyPrimary], $this->keyUnique, $this->keyIndex);
     }
 
     /**

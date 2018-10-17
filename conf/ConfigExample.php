@@ -1,6 +1,6 @@
 <?php
 /**
- * dbog ...conf/ConfigExample.php
+ * dbog .../conf/ConfigExample.php
  * Can be renamed to Config.php, edited and used as application configuration
  */
 

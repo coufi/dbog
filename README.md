@@ -39,3 +39,12 @@ Create `Conf\Config` class and set DB connection configuration and main configur
  - 2018-10-09 - Added structure definition validator before database sync.
  - 2018-10-15 - Fixed synchronization of all FKs that leads on changed PK.
  
+### To-do List
+
+- advanced validation for relations - check target columns, unique keys by relation type (1:N, N:1, M:N, 1:1)
+- add instance parameter - enable specify db instance for sync run
+- multicolumn PK
+- mysqli adapter besides PDO
+- inject db adapter to syncer runner
+- more datatypes - binary types, *text types, json, etc.
+- data synchronization - import csv to db

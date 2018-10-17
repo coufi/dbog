@@ -16,6 +16,5 @@ if ($help)
 }
 else
 {
-
     $dbog->run($request->getArgument('output-queries', false),  $request->getArgument('verbose', false), $request->getArgument('dry-run', false));
 }

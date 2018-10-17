@@ -8,6 +8,11 @@ namespace Src\Core\Relation;
 
 use Src\Exceptions\SyncerException;
 
+/**
+ * Class Extension
+ * @package Src\Core\Relation
+ * Represents one-to-one relation.
+ */
 class Extension extends \Src\Core\Relation
 {
     /**

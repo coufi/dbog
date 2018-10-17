@@ -30,4 +30,3 @@ class Schema extends DbSchema
         $this->addView(View\SalesOverview::class);
     }
 }
-

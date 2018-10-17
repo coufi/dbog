@@ -1,6 +1,6 @@
 <?php
 /**
- * dbog ...conf/ConfigTetExample.php
+ * dbog .../conf/ConfigTetExample.php
  * Can be renamed to ConfigTest.php, edited and used as configuration file for syncer tests
  */
 

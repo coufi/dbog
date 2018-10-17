@@ -8,6 +8,11 @@ namespace Src\Core\Relation;
 
 use Src\Exceptions\SyncerException;
 
+/**
+ * Class Mapped
+ * @package Src\Core\Relation
+ * Represents one-to-many relation from the opposite side.
+ */
 class Mapped extends \Src\Core\Relation
 {
     /**

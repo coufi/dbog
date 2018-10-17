@@ -11,6 +11,9 @@ class Product extends \Src\Core\Table
     const COLUMN_NAME   = 'name';
     const COLUMN_URI    = 'uri';
 
+    const TABLE_PRODUCT_CATEGORY                = 'product_category';
+    const TABLE_PRODUCT_HAS_PRODUCT_CATEGORY    = 'product_has_product_category';
+
     /**
      * {@inheritdoc }
      */
@@ -23,6 +26,9 @@ class Product extends \Src\Core\Table
 
         $config->addKeyUnique([self::COLUMN_NAME]);
         $config->addKeyUnique([self::COLUMN_URI]);
+
+        $config->addRelationConnection(self::TABLE_PRODUCT_CATEGORY, self::TABLE_PRODUCT_HAS_PRODUCT_CATEGORY);
+
         return $config;
     }
 }

@@ -8,6 +8,11 @@ namespace Src\Core\Relation;
 
 use Src\Exceptions\SyncerException;
 
+/**
+ * Class Connection
+ * @package Src\Core\Relation
+ * Represents many-to-many relation.
+ */
 class Connection extends \Src\Core\Relation
 {
     /**

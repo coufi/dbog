@@ -70,46 +70,22 @@ abstract class Table extends Entity implements ValidableInterface
     {
         $config = $this->getConfiguration();
 
-        // validate mappings
-        foreach ($config->getRelationsMapping() as $mapping)
-        {
-            $mapping->validate();
-        }
-
-        // validate connections
-        foreach ($config->getRelationsConnection() as $connection)
-        {
-            $connection->validate();
-        }
-
-        // validate extensions
-        foreach ($config->getRelationsExtension() as $extension)
-        {
-            $extension->validate();
-        }
-
-        // validate mappeds
-        foreach ($config->getRelationsMapped() as $mapped)
-        {
-            $mapped->validate();
-        }
-
-        // validate unique keys
-        foreach ($config->getKeysUnique() as $unique)
-        {
-            $unique->validate();
-        }
-
-        // validate index keys
-        foreach ($config->getKeysIndex() as $index)
-        {
-            $index->validate();
-        }
-
         // validate pk
         if (!$config->getKeyPrimary())
         {
             throw new SyncerException("Missing primary key in table {$this->tableName}");
+        }
+
+        // validate relations
+        foreach ($config->getRelations() as $relation)
+        {
+            $relation->validate();
+        }
+
+        // validate keys
+        foreach ($config->getKeys() as $key)
+        {
+            $key->validate();
         }
     }
 
