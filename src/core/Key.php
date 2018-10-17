@@ -7,6 +7,7 @@ namespace Src\Core;
 
 
 use Src\Core\Table\Config;
+use Src\Exceptions\SyncerException;
 use Src\Syncer\Runner;
 
 abstract class Key implements ValidableInterface
@@ -29,17 +30,21 @@ abstract class Key implements ValidableInterface
     public function __construct($table, $columns)
     {
         $this->table = $table;
-        $this->columns = $columns;
+        $this->columns = is_array($columns) ? $columns : [];
 
         $this->setKeyName();
     }
 
     /**
      *  Validate key.
+     * @throws SyncerException
      */
     public function validate()
     {
-        // do nothing
+        if (!$this->columns)
+        {
+            throw new SyncerException("Key {$this->getName()} for table {$this->getTableName()} does not have specified any column");
+        }
     }
 
     /**

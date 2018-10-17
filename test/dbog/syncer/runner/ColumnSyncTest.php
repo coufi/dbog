@@ -5,36 +5,11 @@
 
 namespace Test\Dbog\Syncer\Runner;
 
-use Conf\ConfigTest;
 use Src\Core\Datatype\DtBigint;
-use Src\Core\Schema;
-use Src\Dbog;
-use Src\LoggerPrint;
-use Test\Dbog\Syncer\RunnerTestCase;
+use Test\Dbog\Syncer\CommonTestCase;
 
-
-class ColumnSyncTest extends RunnerTestCase
+class ColumnSyncTest extends CommonTestCase
 {
-    /**  @var Schema */
-    protected $schema;
-
-    /**  @var ConfigTest */
-    protected $config;
-
-    protected function setUp()
-    {
-        $this->config = new ConfigTest();
-        $this->schema = $this->config->getInstances()[0]->getSchema();
-
-        parent::setUp();
-    }
-
-    private function rundDbog()
-    {
-        $dbog = new Dbog($this->config, new LoggerPrint());
-        $dbog->run(true, false);
-    }
-
     private function getAddedColumnOutput()
     {
         $lines = [];

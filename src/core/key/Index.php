@@ -60,6 +60,8 @@ class Index extends \Src\Core\Key
      */
     public function validate()
     {
+        parent::validate();
+
         $columns = $this->table->getColumns();
         foreach ($this->getColumns() as $columnName)
         {
