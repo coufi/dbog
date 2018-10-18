@@ -6,6 +6,9 @@
 namespace Test\Dbog\Syncer\Runner;
 
 use Src\Core\Datatype\DtBigint;
+use Src\Core\Datatype\DtChar;
+use Src\Core\Datatype\DtDecimal;
+use Src\Core\Datatype\DtString;
 use Test\Dbog\Syncer\CommonTestCase;
 
 class ColumnSyncTest extends CommonTestCase
@@ -65,6 +68,30 @@ class ColumnSyncTest extends CommonTestCase
         $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_3` `billing_row_3` year NULL AFTER `billing_row_2`';
         $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_4` `billing_row_4` tinyint signed NULL AFTER `billing_row_3`';
         $lines[] = "ALTER TABLE `order` CHANGE `gender` `gender` enum('MAN','WOMAN','UNDEFINED') NULL AFTER `delivery_row_6`";
+        $lines[] = 'SET foreign_key_checks = 1';
+
+        return $lines;
+    }
+
+    private function getChangedColumnStringMaxLengthOutput()
+    {
+        $lines = [];
+        $lines[] = 'USE `sync_test`';
+        $lines[] = 'SET foreign_key_checks = 0';
+        $lines[] = 'ALTER TABLE `country` CHANGE `code_2` `code_2` char(4) NOT NULL AFTER `id_country`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `first_name` `first_name` varchar(255) NULL AFTER `id_order`';
+        $lines[] = 'SET foreign_key_checks = 1';
+
+        return $lines;
+    }
+
+    private function getChangedColumnDecimalOutput()
+    {
+        $lines = [];
+        $lines[] = 'USE `sync_test`';
+        $lines[] = 'SET foreign_key_checks = 0';
+        $lines[] = "ALTER TABLE `order` CHANGE `total` `total` decimal(10,4) unsigned NOT NULL DEFAULT '0.0000' AFTER `canceled`";
+        $lines[] = 'ALTER TABLE `order_item` CHANGE `price` `price` decimal(19,3) NULL AFTER `quantity`';
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -177,6 +204,41 @@ class ColumnSyncTest extends CommonTestCase
         $this->outputBegin();
         $this->rundDbog(true);
         $this->outputEndEquals($this->getChangedColumnDatatypeOutput(), true);
+    }
+
+    public function testChangedColumnStringMaxLength()
+    {
+        $tableConfig = $this->schema->getTable('order')->getConfiguration();
+        $dt = new DtString();
+        $dt->setLength(255);
+        $tableConfig->getColumn('first_name')->setDatatype($dt);
+
+
+        $tableConfig = $this->schema->getTable('country')->getConfiguration();
+        $dt = new DtChar();
+        $dt->setLength(4);
+        $tableConfig->getColumn('code_2')->setDatatype($dt);
+
+        $this->outputBegin();
+        $this->rundDbog(true);
+        $this->outputEndEquals($this->getChangedColumnStringMaxLengthOutput(), true);
+    }
+
+    public function testChangedColumnDecimal()
+    {
+        $tableConfig = $this->schema->getTable('order')->getConfiguration();
+
+        /** @var DtDecimal $dt */
+        $dt = $tableConfig->getColumn('total')->getDatatype();
+        $dt->setPrecision(10);
+
+        $tableConfig = $this->schema->getTable('order_item')->getConfiguration();
+        $dt = $tableConfig->getColumn('price')->getDatatype();
+        $dt->setFraction(3);
+
+        $this->outputBegin();
+        $this->rundDbog(true);
+        $this->outputEndEquals($this->getChangedColumnDecimalOutput(), true);
     }
 
     public function testChangedColumnName()

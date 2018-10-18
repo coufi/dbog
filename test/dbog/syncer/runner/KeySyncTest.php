@@ -24,6 +24,20 @@ class KeySyncTest extends CommonTestCase
         return $lines;
     }
 
+    private function getChangedIndexOutput()
+    {
+        $lines = [];
+        $lines[] = 'USE `sync_test`';
+        $lines[] = 'SET foreign_key_checks = 0';
+        $lines[] = 'ALTER TABLE `order` DROP INDEX `ix_order_hash`';
+        $lines[] = 'ALTER TABLE `order` ADD INDEX `ix_order_hash` (`hash`(16))';
+        $lines[] = 'ALTER TABLE `order` ADD INDEX `order_timestamp_index` (`timestamp`)';
+        $lines[] = 'ALTER TABLE `order` DROP INDEX `ix_order_timestamp`';
+        $lines[] = 'SET foreign_key_checks = 1';
+
+        return $lines;
+    }
+
     private function getAddedUqOutput()
     {
         $lines = [];
@@ -31,6 +45,18 @@ class KeySyncTest extends CommonTestCase
         $lines[] = 'SET foreign_key_checks = 0';
         $lines[] = 'ALTER TABLE `order_item` ADD CONSTRAINT `uq_order_item_timestamp` UNIQUE `uq_order_item_timestamp` (`timestamp`)';
         $lines[] = 'ALTER TABLE `order_item` ADD CONSTRAINT `custom_key_name` UNIQUE `custom_key_name` (`quantity`)';
+        $lines[] = 'SET foreign_key_checks = 1';
+
+        return $lines;
+    }
+
+    private function getChangedUqOutput()
+    {
+        $lines = [];
+        $lines[] = 'USE `sync_test`';
+        $lines[] = 'SET foreign_key_checks = 0';
+        $lines[] = 'ALTER TABLE `product` ADD CONSTRAINT `custom_key_name` UNIQUE `custom_key_name` (`name`)';
+        $lines[] = 'ALTER TABLE `product` DROP INDEX `uq_product_name`';
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -63,6 +89,18 @@ class KeySyncTest extends CommonTestCase
 
     }
 
+    public function testChangedIndex()
+    {
+        $tableConfig = $this->schema->getTable('order')->getConfiguration();
+        $tableConfig->getKeysIndex()[5]->setPrefixLength('hash', 16);
+        $tableConfig->getKeysIndex()[6]->setCustomKeyName('order_timestamp_index');
+
+        $this->outputBegin();
+        $this->rundDbog(true);
+        $this->outputEndEquals($this->getChangedIndexOutput(), true);
+
+    }
+
     public function testAddedUq()
     {
         $tableConfig = $this->schema->getTable('order_item')->getConfiguration();
@@ -72,6 +110,16 @@ class KeySyncTest extends CommonTestCase
         $this->outputBegin();
         $this->rundDbog(true);
         $this->outputEndEquals($this->getAddedUqOutput(), true);
+    }
+
+    public function testChangedUq()
+    {
+        $tableConfig = $this->schema->getTable('product')->getConfiguration();
+        $tableConfig->getKeysUnique()[0]->setCustomKeyName('custom_key_name');
+
+        $this->outputBegin();
+        $this->rundDbog(true);
+        $this->outputEndEquals($this->getChangedUqOutput(), true);
     }
 
     public function testChangedPk()
