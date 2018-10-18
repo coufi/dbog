@@ -102,12 +102,13 @@ class Runner
     /**
      * Process query.
      * @param string $query SQL query string
+     * @param bool $isSafe Whether this query does not alter tables
      */
-    public function processQuery($query)
+    public function processQuery($query, $isSafe = false)
     {
         $this->logger->logQuery($query . ';');
 
-        if (!$this->dryRun)
+        if (!$this->dryRun || $isSafe)
         {
             $this->db->query($query);
         }

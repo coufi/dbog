@@ -58,7 +58,7 @@ class KeySyncTest extends CommonTestCase
         $tableConfig->addKeyIndex(['note'])->setPrefixLength('note', 10);
 
         $this->outputBegin();
-        $this->rundDbog();
+        $this->rundDbog(true);
         $this->outputEndEquals($this->getAddedIndexOutput(), true);
 
     }
@@ -70,7 +70,7 @@ class KeySyncTest extends CommonTestCase
         $tableConfig->addKeyUnique(['quantity'])->setCustomKeyName('custom_key_name');
 
         $this->outputBegin();
-        $this->rundDbog();
+        $this->rundDbog(true);
         $this->outputEndEquals($this->getAddedUqOutput(), true);
     }
 

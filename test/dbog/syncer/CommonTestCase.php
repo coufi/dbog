@@ -26,9 +26,12 @@ abstract class CommonTestCase extends RunnerTestCase
         parent::setUp();
     }
 
-    protected function rundDbog()
+    /**
+     * @param bool $dryRun
+     */
+    protected function rundDbog($dryRun = false)
     {
         $dbog = new Dbog($this->config, new LoggerPrint());
-        $dbog->run(true, false);
+        $dbog->run(true, false, $dryRun);
     }
 }

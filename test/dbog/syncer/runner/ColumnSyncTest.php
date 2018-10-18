@@ -110,7 +110,7 @@ class ColumnSyncTest extends CommonTestCase
         $tableConfig->getColumn('content')->setNull(false);
 
         $this->outputBegin();
-        $this->rundDbog();
+        $this->rundDbog(true);
         $this->outputEndEquals($this->getChangedColumnNullabilityOutput(), true);
     }
 
@@ -125,7 +125,7 @@ class ColumnSyncTest extends CommonTestCase
         $tableConfig->getColumn('e_mail')->setDefault('@');
 
         $this->outputBegin();
-        $this->rundDbog();
+        $this->rundDbog(true);
         $this->outputEndEquals($this->getChangedColumnDefaultValueOutput(), true);
     }
 
@@ -175,7 +175,7 @@ class ColumnSyncTest extends CommonTestCase
 
 
         $this->outputBegin();
-        $this->rundDbog();
+        $this->rundDbog(true);
         $this->outputEndEquals($this->getChangedColumnDatatypeOutput(), true);
     }
 
@@ -185,7 +185,7 @@ class ColumnSyncTest extends CommonTestCase
         $this->schema->addTable(\Test\Schema\Table\ProductCategory::class);
 
         $this->outputBegin();
-        $this->rundDbog();
+        $this->rundDbog(true);
         $this->outputEndEquals($this->getChangedColumnNameOutput(), true);
     }
 
