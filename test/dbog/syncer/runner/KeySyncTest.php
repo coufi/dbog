@@ -42,8 +42,8 @@ class KeySyncTest extends CommonTestCase
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
         $lines[] = 'ALTER TABLE `order_item` DROP FOREIGN KEY fk_order_item_id_order';
-        $lines[] = 'ALTER TABLE `order` CHANGE `id_order` `id_order` smallint unsigned NOT NULL AUTO_INCREMENT  FIRST';
-        $lines[] = 'ALTER TABLE `order_item` CHANGE `id_order` `id_order` smallint unsigned NOT NULL  AFTER `id_order_item`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `id_order` `id_order` smallint unsigned NOT NULL AUTO_INCREMENT FIRST';
+        $lines[] = 'ALTER TABLE `order_item` CHANGE `id_order` `id_order` smallint unsigned NOT NULL AFTER `id_order_item`';
         $lines[] = 'ALTER TABLE `order_item` ADD CONSTRAINT `fk_order_item_id_order` FOREIGN KEY (`id_order`) REFERENCES `order` (`id_order`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         $lines[] = 'SET foreign_key_checks = 1';
 

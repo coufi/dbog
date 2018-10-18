@@ -15,7 +15,7 @@ class ColumnSyncTest extends CommonTestCase
         $lines = [];
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
-        $lines[] = 'ALTER TABLE `product` ADD `description` varchar(127) NOT NULL  AFTER `uri`';
+        $lines[] = 'ALTER TABLE `product` ADD `description` varchar(127) NOT NULL AFTER `uri`';
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -26,8 +26,8 @@ class ColumnSyncTest extends CommonTestCase
         $lines = [];
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
-        $lines[] = 'ALTER TABLE `product_category` CHANGE `name` `name` varchar(63) NULL  AFTER `id_product_category`';
-        $lines[] = 'ALTER TABLE `product_category` CHANGE `content` `content` text NOT NULL  AFTER `uri`';
+        $lines[] = 'ALTER TABLE `product_category` CHANGE `name` `name` varchar(63) NULL AFTER `id_product_category`';
+        $lines[] = 'ALTER TABLE `product_category` CHANGE `content` `content` text NOT NULL AFTER `uri`';
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -38,10 +38,10 @@ class ColumnSyncTest extends CommonTestCase
         $lines = [];
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
-        $lines[] = 'ALTER TABLE `order` CHANGE `total` `total` decimal(19,4) unsigned NOT NULL DEFAULT \'1.0000\'  AFTER `canceled`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `e_mail` `e_mail` varchar(63) NULL DEFAULT \'@\'  AFTER `phone`';
-        $lines[] = 'ALTER TABLE `order_item` CHANGE `quantity` `quantity` smallint unsigned NOT NULL DEFAULT \'10\'  AFTER `timestamp`';
-        $lines[] = 'ALTER TABLE `order_item` CHANGE `confirmed` `confirmed` tinyint(1) unsigned NOT NULL DEFAULT \'1\'  AFTER `price`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `total` `total` decimal(19,4) unsigned NOT NULL DEFAULT \'1.0000\' AFTER `canceled`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `e_mail` `e_mail` varchar(63) NULL DEFAULT \'@\' AFTER `phone`';
+        $lines[] = 'ALTER TABLE `order_item` CHANGE `quantity` `quantity` smallint unsigned NOT NULL DEFAULT \'10\' AFTER `timestamp`';
+        $lines[] = 'ALTER TABLE `order_item` CHANGE `confirmed` `confirmed` tinyint(1) unsigned NOT NULL DEFAULT \'1\' AFTER `price`';
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -52,19 +52,19 @@ class ColumnSyncTest extends CommonTestCase
         $lines = [];
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
-        $lines[] = 'ALTER TABLE `order` CHANGE `first_name` `first_name` bigint signed NULL  AFTER `id_order`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `timestamp` `timestamp` date NULL  AFTER `surname`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `total` `total` decimal(10,0) NOT NULL DEFAULT \'0.0000\'  AFTER `canceled`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `phone` `phone` int signed NULL  AFTER `id_currency`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `e_mail` `e_mail` mediumint signed NULL  AFTER `phone`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `institution` `institution` mediumint unsigned NULL  AFTER `e_mail`';
-        $lines[] = "ALTER TABLE `order` CHANGE `in` `in` set('val1','val2') NULL  AFTER `institution`";
-        $lines[] = 'ALTER TABLE `order` CHANGE `vat` `vat` smallint signed NULL  AFTER `in`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_1` `billing_row_1` mediumtext NULL  AFTER `vat`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_2` `billing_row_2` time NULL  AFTER `billing_row_1`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_3` `billing_row_3` year NULL  AFTER `billing_row_2`';
-        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_4` `billing_row_4` tinyint signed NULL  AFTER `billing_row_3`';
-        $lines[] = "ALTER TABLE `order` CHANGE `gender` `gender` enum('MAN','WOMAN','UNDEFINED') NULL  AFTER `delivery_row_6`";
+        $lines[] = 'ALTER TABLE `order` CHANGE `first_name` `first_name` bigint signed NULL AFTER `id_order`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `timestamp` `timestamp` date NULL AFTER `surname`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `total` `total` decimal(10,0) NOT NULL DEFAULT \'0.0000\' AFTER `canceled`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `phone` `phone` int signed NULL AFTER `id_currency`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `e_mail` `e_mail` mediumint signed NULL AFTER `phone`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `institution` `institution` mediumint unsigned NULL AFTER `e_mail`';
+        $lines[] = "ALTER TABLE `order` CHANGE `in` `in` set('val1','val2') NULL AFTER `institution`";
+        $lines[] = 'ALTER TABLE `order` CHANGE `vat` `vat` smallint signed NULL AFTER `in`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_1` `billing_row_1` mediumtext NULL AFTER `vat`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_2` `billing_row_2` time NULL AFTER `billing_row_1`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_3` `billing_row_3` year NULL AFTER `billing_row_2`';
+        $lines[] = 'ALTER TABLE `order` CHANGE `billing_row_4` `billing_row_4` tinyint signed NULL AFTER `billing_row_3`';
+        $lines[] = "ALTER TABLE `order` CHANGE `gender` `gender` enum('MAN','WOMAN','UNDEFINED') NULL AFTER `delivery_row_6`";
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -75,7 +75,7 @@ class ColumnSyncTest extends CommonTestCase
         $lines = [];
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
-        $lines[] = 'ALTER TABLE `product_category` CHANGE `content` `test` text NULL  AFTER `uri`';
+        $lines[] = 'ALTER TABLE `product_category` CHANGE `content` `test` text NULL AFTER `uri`';
         $lines[] = 'SET foreign_key_checks = 1';
 
         return $lines;
@@ -86,7 +86,7 @@ class ColumnSyncTest extends CommonTestCase
         $lines = [];
         $lines[] = 'USE `sync_test`';
         $lines[] = 'SET foreign_key_checks = 0';
-        $lines[] = 'ALTER TABLE `country` CHANGE `name` `name` varchar(31) NOT NULL  AFTER `code_2`';
+        $lines[] = 'ALTER TABLE `country` CHANGE `name` `name` varchar(31) NOT NULL AFTER `code_2`';
         $lines[] = 'ALTER TABLE `country` DROP `numeric_3`';
         $lines[] = 'SET foreign_key_checks = 1';
 

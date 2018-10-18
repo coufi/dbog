@@ -529,10 +529,6 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
      */
     public function sync($runner)
     {
-        $columnsList = $this->getTable()->getColumnNames();
-        $ordinalPositions = $this->getTable()->getColumnOrdinalPositions();
-        $ordinalPosition = $ordinalPositions[$this->getName()];
-
         $r = $this->getInformationSchema($runner->getDb(), $runner->getDbSchemaName());
 
         // found definition in information schema, check for changes
@@ -603,7 +599,7 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
             }
 
             // changed ordinal position
-            if ($position !== null && $position != ($ordinalPosition + 1))
+            if ($position !== null && $position != ($this->getOrdinalPosition() + 1))
             {
                 $runner->log("SYNC: Changing column {$this->getName()} ordinal position.");
                 $recreate = true;
@@ -656,11 +652,10 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
                     }
                 }
 
-                $columnPosition = $ordinalPosition == 0 ? ' FIRST' : " AFTER `" . $columnsList[$ordinalPosition - 1] . '`';
                 $changedColumn = $renameColumn ? "`{$this->getRenamedFrom()}`" : "`{$this->getName()}`";
 
                 $sql = $this->getSQLCreate($runner->getDb(), $allowPrimaryKey);
-                $runner->processQuery("ALTER TABLE `{$this->table->getname()}` CHANGE $changedColumn $sql $columnPosition");
+                $runner->processQuery("ALTER TABLE `{$this->table->getname()}` CHANGE $changedColumn $sql {$this->getOrdinalPositionSQL()}");
             }
         }
         else
@@ -673,13 +668,32 @@ WHERE `C`.`TABLE_SCHEMA` = '{$dbSchemaName}' AND `C`.`TABLE_NAME` = :table  AND 
                 $runner->processQuery("ALTER TABLE `{$this->getTable()->getName()}` DROP PRIMARY KEY");
             }
 
-            $columnPosition = $ordinalPosition == 0 ? ' FIRST' : " AFTER `" . $columnsList[$ordinalPosition - 1] . "`";
             $runner->log("SYNC: Creating column {$this->getName()}.");
             $sql = $this->getSQLCreate($runner->getDb());
-            $runner->processQuery("ALTER TABLE `{$this->getTable()->getName()}` ADD $sql $columnPosition");
+            $runner->processQuery("ALTER TABLE `{$this->getTable()->getName()}` ADD $sql {$this->getOrdinalPositionSQL()}");
         }
     }
 
+    /**
+     * Get column ordinal position.
+     * @return string
+     */
+    protected function getOrdinalPositionSQL()
+    {
+        $columnsList = $this->getTable()->getColumnNames();
+        $ordinalPosition = $this->getOrdinalPosition();
+
+        return $ordinalPosition == 0 ? 'FIRST' : "AFTER `" . $columnsList[$ordinalPosition - 1] . "`";
+    }
+
+    /**
+     * Get column ordinal position in table list, zero based.
+     * @return int
+     */
+    protected function getOrdinalPosition()
+    {
+        return $this->getTable()->getColumnOrdinalPositions()[$this->getName()];
+    }
 
     /**
      * Whether is incrementable in database
