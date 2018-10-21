@@ -6,7 +6,7 @@
 namespace Src;
 
 
-use Src\Database\AdapterPDO;
+use Src\Database\Factory;
 use Src\Database\Instance;
 use Src\Exceptions\SyncerException;
 use Src\Syncer\Runner;
@@ -15,6 +15,9 @@ class Dbog
 {
     /** @var Logger */
     protected $logger;
+
+    /** @var Factory */
+    protected $dbFactory;
 
     /** @var Config */
     protected $config;
@@ -32,6 +35,7 @@ class Dbog
 
         $this->logger = $logger;
         $this->config = $config;
+        $this->dbFactory = new Factory();
     }
 
     /**
@@ -73,9 +77,7 @@ class Dbog
      */
     protected function createSyncerRunner($instance, $dryRun)
     {
-        // TODO: Should not be hardcoded, refactor after first successful tests
-        $db = new AdapterPDO();
-        $db->connect($instance);
+        $db = $this->dbFactory->create($instance);
 
         $runner = new Runner($db, $instance->getSchema(), $instance->getDbSchemaName());
         $runner->setLogger($this->logger);

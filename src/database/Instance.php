@@ -9,6 +9,8 @@ use Src\Core\Schema;
 
 class Instance
 {
+    const ADAPTER_PDO = 'PDO';
+
     /** @var Server */
     protected $dbServer;
     /** @var Schema */
@@ -19,6 +21,8 @@ class Instance
     protected $password;
     /** @var string */
     protected $dbSchemaName;
+    /** @var string */
+    protected $dbAdapter = self::ADAPTER_PDO;
 
     /**
      * @param Server $dbServer
@@ -36,10 +40,13 @@ class Instance
 
     /**
      * @param Schema
+     * @return Instance
      */
     public function setSchema($schema)
     {
         $this->schema = $schema;
+
+        return $this;
     }
 
     /**
@@ -80,5 +87,22 @@ class Instance
     public function getDbSchemaName()
     {
         return $this->dbSchemaName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbAdapter()
+    {
+        return $this->dbAdapter;
+    }
+
+    /**
+     * @return Instance
+     */
+    public function setAdapterPDO()
+    {
+        $this->dbAdapter = self::ADAPTER_PDO;
+        return $this;
     }
 }
